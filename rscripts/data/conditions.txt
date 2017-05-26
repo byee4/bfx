@@ -1,0 +1,7 @@
+sample	edit_or_not	wt_or_adr
+s1.bam	edit	wt
+s2.bam	noedit	adr2
+s3.bam	edit	wt
+s5.bam	noedit	adr2
+s6.bam	edit	wt
+s7.bam	noedit	adr2

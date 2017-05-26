@@ -1,0 +1,8 @@
+Samples	Condition
+KB10	wt
+KB11	wt
+KB12	wt
+KB13	hur
+KB14	hur
+KB15	hur
+KB16	hur

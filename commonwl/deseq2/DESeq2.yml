@@ -1,0 +1,28 @@
+# Either featureCounts (default) or a count matrix.
+# Change 'col_skip' number if this file is not
+# a featureCounts output.
+counts:
+  class: File
+  path: ../example_data/counts.txt
+
+# A file containing sample->conditions values
+conditions:
+  class: File
+  path: ../example_data/conditions.txt
+
+# Filters out average count
+filter_avg: 6
+
+# Perform DE with respect to base_ref (ie. geneA is upregulated
+# in 'knockout' with respect to 'wt' = positive fold change
+base_ref: wt
+
+# Number of columns to skip that are not expression counts.
+# In featureCounts outputs, there are typically 6 non-countable
+# columns. Default: 6
+col_skip: 6
+
+# Given a table of associated sample->conditions, which
+# column should we use to contrast?
+column: sampletype
+
