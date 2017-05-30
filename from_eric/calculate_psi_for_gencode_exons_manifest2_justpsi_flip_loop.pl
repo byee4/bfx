@@ -113,11 +113,11 @@ my $n_expts = scalar(@{$filelist{"expt"}});
 my %flags;
 my %toprint;
 
-# print "Calculating psi values";
+print "Calculating psi values";
 for my $datatype ("control","expt") {
     for my $label (@{$filelist{$datatype}}) {
         # make label (expt bam) the outer loop
-        open(my $fh, '>', "/projects/ps-yeolab3/bay001/tmp/dpsi/${label}.txt");
+        open(my $fh, '>', "/projects/ps-yeolab3/bay001/tmp/psi/${label}.txt");
         for my $chr (keys %exon_triplets) {
             for my $str ("+","-") {
                 for my $triplet (keys %{$exon_triplets{$chr}{$str}}) {
@@ -138,10 +138,8 @@ for my $datatype ("control","expt") {
                     if (exists $jxncounts_hash{$chr.":".$str.":".$se_jxn_ex}{$label}) {
                         $exclusion_n = $jxncounts_hash{$chr.":".$str.":".$se_jxn_ex}{$label};
                     }
-
-                    if ($exclusion_n + $inclusion_n >= 0) {
+                    if ($exclusion_n + $inclusion_n > 0) {
                         my $psi = sprintf("%.5f",($inclusion_n) / ($inclusion_n + 2 * $exclusion_n));
-
                         ### Get upstream/skipped/downstream exons
                         my ($current_upex,$current_uplen);
                         my ($current_dnex,$current_dnlen);
