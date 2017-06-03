@@ -88,6 +88,17 @@ def get_avg_dpsi_for_all_junctions(df, default_region='junction'):
     return pd.DataFrame(df.groupby(default_region)['IncLevelDifference'].mean())
 
 
+def filter_rmats_df(df, pv=1, fdr=1, inc_max=1, inc_min=-1, index=True):
+    df = df[
+        (df['PValue'] < pv) & (df['FDR'] < fdr) & \
+        (df['IncLevelDifference'] <= inc_max) & \
+        (df['IncLevelDifference'] >= inc_min)
+        ]
+    if index:
+        df['index'] = df.apply(event_to_string, axis=1)
+        df.set_index('index', inplace=True)
+    return df
+
 def get_dpsi_series(df, pv=1, fdr=1, inc_max=1, inc_min=-1, index=True):
     """
 
@@ -111,14 +122,7 @@ def get_dpsi_series(df, pv=1, fdr=1, inc_max=1, inc_min=-1, index=True):
         series list of all dpsi in the file
     """
 
-    df = df[
-        (df['PValue'] < pv) & (df['FDR'] < fdr) & \
-        (df['IncLevelDifference'] <= inc_max) & \
-        (df['IncLevelDifference'] >= inc_min)
-    ]
-    if index:
-        df['index'] = df.apply(event_to_string, axis=1)
-        df.set_index('index', inplace=True)
+    df = filter_rmats_df(df, pv, fdr, inc_max, inc_min, index)
     return df['IncLevelDifference']
 
 def event_to_string(row, event = 'se'):
@@ -180,6 +184,7 @@ def get_avg_inclevels(row, level='IncLevel2'):
     """
     Returns the average of the two replicates for a given IncLevel column.
     Returns np.nan if both reps have NA values
+    Returns the rep_x incLevel if rep_y incLevel is NA.
 
     Parameters
     ----------
@@ -279,7 +284,7 @@ def get_avg_jc(df, sample='SJC_SAMPLE_1'):
 def get_inclevels(df, level='IncLevel1', rep=0):
     """
     Given a level and a rep number, return a series of inclevels from the df.
-
+    NOTE: returns all NA's with np.nan !
     Parameters
     ----------
     df : pandas.core.frame.DataFrame
@@ -299,8 +304,13 @@ def get_inclevels_from_row(row, level='IncLevel1', rep=0):
     """
     For a given row, an column (IncLevel1 or 2), and a replicate,
     return the incLevel.
+    NOTE: returns all NA's with np.nan !
     """
-    return float(row[level].split(',')[rep].replace('NA', '-1'))
+    inc_level = row[level].split(',')[rep]
+    if inc_level != 'NA':
+        return float(inc_level)
+    else:
+        return np.nan
 
 
 def split_and_append_all_csv(df):
@@ -351,7 +361,7 @@ def trim(dx, ext_label='all'):
     )
     inc2_rep2['label'] = 'IncLevel2 (Control??)'
     inc = pd.concat([inc1_rep1, inc1_rep2, inc2_rep1, inc2_rep2])
-    inc[0] = inc[0].replace(-1, np.nan)
+    inc[0] = inc[0].replace(-1, np.nan)  # TODO: remove.
     inc['subset'] = ext_label
     return inc
 

@@ -52,11 +52,22 @@ def get_clip_file_from_uid(clip, rbp_uid):
         HepG2 or K562 usually, could be anything in the "Cell line" column
     """
     # clip = pd.read_table(manifest_file)
+    clip_rep1 = None
+    clip_rep2 = None
+
     rbp_df = clip[clip['uID'] == rbp_uid]
+    if clip.shape[1] == 6:
+        clip_rep1 = rbp_df['CLIP_rep1'].to_string(index=False, header=False)
+        clip_rep2 = rbp_df['CLIP_rep2'].to_string(index=False, header=False)
+    elif clip.shape[1] == 5:
+        clip_rep1 = rbp_df['CLIP'].to_string(index=False, header=False)
+        clip_rep2 = None
+    else:
+        print("Warning, dimensions of the input norm manifest are off.")
+        return 1
     clip_rbp = rbp_df['RBP'].to_string(index=False, header=False)
     clip_celltype = rbp_df['Cell line'].to_string(index=False, header=False)
-    clip_rep1 = rbp_df['CLIP_rep1'].to_string(index=False, header=False)
-    clip_rep2 = rbp_df['CLIP_rep2'].to_string(index=False, header=False)
+
     input_rep = rbp_df['INPUT'].to_string(index=False, header=False)
     return clip_rep1, clip_rep2, input_rep, clip_rbp, clip_celltype
 

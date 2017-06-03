@@ -7,6 +7,7 @@ import os
 import urllib
 import sqlite3
 import glob
+from Bio import SeqIO
 
 # from urllib.request import urlopen  # Python3 
 import xml.etree.ElementTree as etree
@@ -66,36 +67,6 @@ def get_ext(my_file):
         return 'genbank'
 
 
-def query_fasta(infile):
-    """ Returns an array of records given a FASTA file. 
-        The function assumes a valid fasta file with a header and sequence
-        
-        Args:
-            infile: The fasta file
-            
-        Returns:
-            An ARRAY of dictionaries containing a number of {name,sequence} 
-            dictionaries.
-        
-    """
-    last_id=None
-    current_sequence=""
-    seqs=[]
-    
-    with open(infile) as f:
-        for line in f:
-            if line[0]=='>':
-                line=line.replace('\n','')
-                if(last_id is not None):
-                    seqs[last_id]={'sequence':current_sequence}
-                current_sequence=""
-                last_id=line.replace('>','');
-            else:
-                current_sequence=current_sequence+line.replace('\n','')
-        seqs.append({'name':last_id,'sequence':current_sequence.upper()})
-    return seqs
-
-
 def query_genbank(infile):
     """ Returns a record given a genbank file. 
         The function assumes the file is valid and that it has the fields:
@@ -145,7 +116,6 @@ def query_genbank(infile):
                                         'sequence':sequence.upper()})
                 else: 
                     warn=True
-                cds=[]
                 features=defaultdict(list)
                 sequence=""
                 seq_flag=False
@@ -269,7 +239,7 @@ def query_refseq_ucsc(refseq_query,exon_specific=False,my_db="hg38",my_user="gen
 
 
 def get_closest_exon(chromosome,pos1,pos2,db="ensembl.sql"):
-    """ Gets the closest exon (max 100kb away) from the position specified.
+    """ Gets the closest exons (max 100kb away) from the position specified.
         It uses (and creates if necessary) 
     """
     
@@ -365,7 +335,6 @@ def mutate_sequence(sequence,mismatch):
     """
     if(not mismatch): # if there is no mismatch, return original sequence!
         return sequence
-    
 
     mismatch = mismatch.split(',') # parse mismatch pattern
     new_sequence = ['']*len(sequence) # empty placeholder for new sequence
@@ -394,16 +363,22 @@ def mutate_sequence(sequence,mismatch):
     return new_sequence
 
 
-def fix_headers(infile, outfile, regex_pattern):
-    """ fixes the headers using the regex pattern
-    
-        Usage:
-            regex_pattern = 'ref\|(\S+)\|'
-            infile = "/home/brian/Documents/Genomes/fpe_ref_F_peregrinus_v1.0_chrMT.fa"
-            outfile = "/home/brian/Documents/Genomes/fpe_ref_F_peregrinus_v1.0_chrMT_fix_headers.fa"
-            fix_headers(infile, outfile, regex_pattern)
+def fix_fasta_headers(infile, outfile, regex_pattern):
     """
-    # pattern = '\((.*)\)'
+    Formats a fasta file header using regex pattern.
+    So instead of the normal header, new headers are just
+     the first found instance of the regex capture.
+    
+    Parameters
+    ----------
+    infile : basestring
+    outfile : basestring
+    regex_pattern : basestring
+
+    Returns
+    -------
+    
+    """
     
     o = open(outfile, 'w')
     with open(infile,'r') as f:
@@ -414,23 +389,109 @@ def fix_headers(infile, outfile, regex_pattern):
                 o.write(line)
 
 
-def append_fasta(some_path, out_file):
-    """ appends fasta files in a path to each other
+def append_fasta(some_path, out_file, ext='fa'):
+    """
+    Appends/concatenates fasta files in a path to each other.
     
-        Usage:
-            some_path = "/home/brian/Documents/Genomes/peregrine_falcon/"
-            out_file = "/home/brian/Documents/Genomes/peregrine_falcon/all_chr.fa"
-            append_fasta(some_path, out_file)
+    Parameters
+    ----------
+    some_path : basestring
+    out_file : basestring
+    ext : basestring
+        default: 'fa'
+    Returns
+    -------
+
     """
     o = open(out_file, 'w')
-    for fasta in glob.glob(some_path+"*.fa"):
-        print(fasta)
-        if(fasta != out_file):
-            with open(fasta, 'r') as f:
+    for fasta_file in glob.glob(some_path+"*.{}".format(ext)):
+        print(fasta_file)
+        if fasta_file != out_file:
+            with open(fasta_file, 'r') as f:
                 for line in f:
                     o.write(line)
-def main():
-    pass
+
+
+def get_seq_dict_from_file(f, seq_ids=[], file_type='fasta', equal=True):
+    """
+    Returns dictionary of {name : sequence}
+
+    Parameters
+    ----------
+
+    f : basestring
+        file location of a fasta file
+    seq_ids : list
+        list of sequence ids to search. Empty field returns all sequences
+    equal : bool
+        True if seq_id needs to be identical
+        False if we just have partial identifier
+    file_type : basestring
+        default "fasta" type file
+    Returns
+    -------
+    records : dict
+        {name:sequence}
+    """
+    records = {}
+    for record in SeqIO.parse(f, file_type):
+        if len(seq_ids) > 0:
+            for name in seq_ids:
+                if equal:
+                    if name == record.id:
+                        records[record.id] = record.seq
+                else:
+                    if name in record.id:
+                        records[record.id] = record.seq
+        else:
+            records[record.id] = record.seq
+    return records
+
+
+def get_seq_sizes(f, seq_ids=[], file_type='fasta', equal=True):
+    """
+    Returns dictionary of {name : seqsize}
+
+    Parameters
+    ----------
+    f
+    seq_ids
+    equal
+    file_type
+
+    Returns
+    -------
+
+    """
+    lengths = {}
+    records = get_seq_dict_from_file(f, seq_ids, file_type, equal)
+
+    for seq_id, sequence in records.iteritems():
+        lengths[seq_id] = len(sequence)
+    return lengths
+
+
+def write_chrom_sizes(
+        infile, outfile, seq_ids=[], file_type='fasta', equal=True
+):
+    """
+    Writes a chrom sizes file, useful for any software that requires
+    a chrom.sizes tabbed file on custom genomes.
     
-if __name__ == '__main__':
-    main()
+    Parameters
+    ----------
+    infile : basestring
+    outfile : basestring
+    seq_ids : list
+    file_type : basestring
+    equal : bool
+
+    Returns
+    -------
+
+    """
+    chrom_sizes = get_seq_sizes(infile, seq_ids, file_type, equal)
+    with open(outfile, 'w') as o:
+        for chrom, length in chrom_sizes.iteritems():
+            o.write("{}\t{}\n".format(chrom, length))
+

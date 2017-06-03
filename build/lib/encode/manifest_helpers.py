@@ -1,3 +1,10 @@
+'''
+Created on Feb 2, 2017
+
+Customized script for parsing yeolab ENCODE-style manifests. 
+See data/ for examples
+@author: brianyee
+'''
 
 import pandas as pd
 import glob
