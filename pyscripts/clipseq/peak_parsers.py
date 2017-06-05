@@ -24,6 +24,7 @@ REGIONS = ['noncoding_exon', '3utr', '5utr', 'intron', 'noncoding_intron',
 
 import glob
 
+
 def split_single_cols(df, col, sep='|'):
     """
     Splits a df['col'] into two separated by 'sep'

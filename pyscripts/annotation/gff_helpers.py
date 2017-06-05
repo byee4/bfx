@@ -6,28 +6,6 @@ from collections import defaultdict
 GTF_NAMES = ['chrom','source','feature_type','start','end','.','strand','.','attributes']
 
 
-def get_feature_type_set(gtf_file):
-    """
-    from a GTF file, extract the set of feature_types
-    (feature_types is the third column, normally)
-    This might be useful for figuring out the priority for annotation.
-    
-    Parameters
-    ----------
-    gtf_file
-
-    Returns
-    -------
-
-    """
-    gtf_df = pd.read_table(
-        gtf_file,
-        names=GTF_NAMES,
-        comment='#'
-    )
-    return set(gtf_df['feature_type'])
-
-
 def get_attribute_type_set(gtf_file, attribute_type):
     """
     from a GTF file, extract the set of attribute_types
@@ -53,9 +31,53 @@ def get_attribute_type_set(gtf_file, attribute_type):
     return set(gtf_df['attributes'].str.extract(regex_filter, expand=False))
 
 
-def build_db(annotation_file, annotation_db_file, force=False):
+def get_feature_type_set_from_df(df):
     """
-    builds a database file from a GTF/GFF annotation file
+    from a GTF file, extract the set of feature_types
+    (feature_types is the third column, normally)
+    This might be useful for figuring out the priority for annotation.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame()
+
+    Returns
+    -------
+
+    """
+    return set(df['feature_type'])
+
+
+def get_attribute_type_set_from_df(df, attribute_type):
+    """
+    from a GTF file, extract the set of attribute_types
+    (attribute_types is one of those fields contained within the 9th column)
+    This might be useful for figuring out the priority for annotation.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame()
+    attribute_type : basestring
+
+    Returns
+    -------
+
+    """
+
+    regex_filter = '{} \"([\w\s\d -]+)\"'.format(attribute_type)
+    return set(df['attributes'].str.extract(regex_filter, expand=False))
+
+
+def build_db(
+        annotation_file, annotation_db_file, force=False,
+        exon_featuretype='exon', grandparent_featuretype='gene'
+):
+    """
+    Builds a database file from a GTF/GFF annotation file.
+    Automatically infers introns (because this is useful in general,
+    but also necessary for eCLIP annotation).
+    
+    Note this function takes awhile to build for human gencode annotations...
     
     Parameters
     ----------
@@ -63,6 +85,12 @@ def build_db(annotation_file, annotation_db_file, force=False):
     annotation_db_file : basestring
     force: bool
         raises exception if db (annotation_db_file) exists
+    exon_featuretype : basestring
+        inverse of this featuretype becomes the intron
+        (default: exon)
+    grandparent_featuretype : basestring
+        boundary of this featuretype used to infer introns
+        (default: gene)
     Returns
     -------
     0 if successful, 1 if not.
@@ -73,40 +101,28 @@ def build_db(annotation_file, annotation_db_file, force=False):
             keep_order=True, merge_strategy='merge',
             sort_attribute_values=True
         )
+
+        infer_and_insert_introns(
+            annotation_db_file,
+            exon_featuretype=exon_featuretype,
+            grandparent_featuretype=grandparent_featuretype
+        )
         return 0
     except Exception as e:
         print(e)
         return 1
 
 
-def gene_id_to_name(db):
-    """
-    Returns a dictionary containing a gene_id:name translation
-    Note: may be different if the 'gene_id' or 'gene_name' 
-    keys are not in the source GTF file
-    (taken from gscripts.region_helpers)
-    
-    Parameters
-    ----------
-    db : database
+def infer_and_insert_introns(db_file, exon_featuretype='exon', grandparent_featuretype='gene'):
+    db = gffutils.FeatureDB(db_file)
+    introns = db.create_introns(
+        exon_featuretype=exon_featuretype,
+        grandparent_featuretype=grandparent_featuretype
+    )
+    db.update(introns)
+    return 0
 
-    Returns
-    -------
 
-    """
-
-    genes = db.features_of_type('gene')
-    gene_name_dict = {}
-    for gene in genes:
-        gene_id = gene.attributes['gene_id'][0] if type(gene.attributes['gene_id']) == list else gene.attributes[
-            'gene_id']
-        try:
-            gene_name_dict[gene_id] = gene.attributes['gene_name'][0]
-        except KeyError:
-            print(gene.attributes.keys())
-            print("Warning. Key not found for {}".format(gene))
-            return 1
-    return gene_name_dict
 
 
 def gene_name_to_id(db):
@@ -153,6 +169,31 @@ def gene_name_to_transcript(db):
     for gene in genes:
         try:
             gene_name_dict[gene.attributes['gene_name'][0]].append(gene.attributes['transcript_id'][0])
+        except KeyError as e:
+            print("Warning. Key not found for {}".format(gene))
+            return 1
+    return gene_name_dict
+
+
+def gene_id_to_transcript(db):
+    """
+    given a gene name, returns a list of associated transcript IDs (one-to-many)
+
+    Parameters
+    ----------
+    db : sqlite3 database
+
+    Returns
+    -------
+    gene_name_dict : dict{list}
+        dictionary of gene_name : [transcript_ids]
+    """
+
+    genes = db.features_of_type('transcript')
+    gene_name_dict = defaultdict(list)
+    for gene in genes:
+        try:
+            gene_name_dict[gene.attributes['gene_id'][0]].append(gene.attributes['transcript_id'][0])
         except KeyError as e:
             print("Warning. Key not found for {}".format(gene))
             return 1
