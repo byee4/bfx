@@ -1,12 +1,13 @@
 import pybedtools
 from tqdm import trange
-import gff_helpers as g
-import region_helpers as r
 import gffutils
 from collections import defaultdict
-import os
 
-PRIORITY = ['CDS', 'UTR', 'GENE', 'EXON', 'TRANSCRIPT', 'START_CODON', 'STOP_CODON']
+TRANSCRIPT_PRIORITY = ['CDS', '5UTR',  '3UTR', 'THREE_AND_FIVE_PRIME_UTR', 'EXON', 'GENE', 'NONCODING_EXON', 'NONCODING_INTRON', 'TRANSCRIPT', 'START_CODON', 'STOP_CODON']
+GENE_PRIORITY = ['CDS', '5UTR', '3UTR', 'THREE_AND_FIVE_PRIME_UTR', 'GENE', 'EXON', 'NONCODING_EXON', 'NONCODING_INTRON', 'TRANSCRIPT', 'START_CODON', 'STOP_CODON']
+
+# PRIORITY = ['CDS', '3UTR', '5UTR', 'THREE_AND_FIVE_PRIME_UTR', 'GENE', 'EXON', 'NONCODING_EXON', 'NONCODING_INTRON', 'TRANSCRIPT', 'START_CODON', 'STOP_CODON']
+
 
 HASH_VAL = 1000000
 MAXVAL = 1000000000
@@ -25,18 +26,23 @@ class Annotator():
         :param db_file: 
         :param chroms: 
         """
+        progress = trange(5, desc='Initializing/creating defs')
 
         self._db = gffutils.FeatureDB(db_file)
-
+        progress.update(1)
         self._featuretypes = self._db.featuretypes()
+        progress.update(1)
         self._geneid_to_name_dict = self._gene_id_to_name()
-        if len(chroms) != 0:
+        progress.update(1)
+        if len(chroms) != 0:  # if use specific chromosomes, otherwise hash all
             self._chromosomes = set(chroms)
         else:
             self._chromosomes = self._chromosome_set()
 
         self.features_dict = self._hash_features()
+        progress.update(1)
         self.cds_dict = self._get_all_cds_dict()
+        progress.update(1)
         # self.genes_dict = g.gene_id_to_transcript
 
     def _chromosome_set(self):
@@ -57,7 +63,11 @@ class Annotator():
         """
 
         features_dict = defaultdict(list)
-        progress = trange(len(self._chromosomes), leave=False, desc='Build Location Index')
+        progress = trange(
+            len(self._chromosomes),
+            leave=False,
+            desc='Build Location Index'
+        )
         for chrom in self._chromosomes:
             for element in self._db.region(seqid=chrom):
                 start = int(element.start / HASH_VAL)
@@ -107,11 +117,13 @@ class Annotator():
                     five_prime_utr = True
 
         if five_prime_utr and three_prime_utr:
-            return 'three_and_five_prime_utr'
+            return 'THREE_AND_FIVE_PRIME_UTR'
         elif five_prime_utr:
-            return 'five_prime_utr'
+            return '5UTR'
+            # return 'five_prime_utr'
         elif three_prime_utr:
-            return 'three_prime_utr'
+            return '3UTR'
+            # return 'three_prime_utr'
         else:
             return 'unclassified_utr'
 
@@ -128,9 +140,11 @@ class Annotator():
 
         genes = self._db.features_of_type('gene')
         gene_name_dict = {}
+
         for gene in genes:
-            gene_id = gene.attributes['gene_id'][0] if type(gene.attributes['gene_id']) == list else gene.attributes[
-                'gene_id']
+            gene_id = gene.attributes['gene_id'][0] if type(
+                gene.attributes['gene_id']
+            ) == list else gene.attributes['gene_id']
             try:
                 gene_name_dict[gene_id] = gene.attributes['gene_name'][0]
             except KeyError:
@@ -157,40 +171,92 @@ class Annotator():
         end_key = int(qend / HASH_VAL)
         for i in range(start_key, end_key + 1):
             for feature in self.features_dict[chrom, i, strand]:
-                if qstart <= feature.start and qend >= feature.end:  # feature completely contains query
+                # feature completely contains query
+                if qstart <= feature.start and qend >= feature.end:
                     features.append(feature)
-                elif qstart >= feature.start and qend <= feature.end:  # query completely contains feature
+                # query completely contains feature
+                elif qstart >= feature.start and qend <= feature.end:
                     features.append(feature)
-                elif qstart <= feature.start and qend >= feature.start:  # feature partially overlaps (qstart < fstart < qend)
+                # feature partially overlaps (qstart < fstart < qend)
+                elif qstart <= feature.start and qend >= feature.start:
                     features.append(feature)
-                elif qstart <= feature.end and qend >= feature.end:  # feature partially overlaps (qstart < fend < qend)
+                # feature partially overlaps (qstart < fend < qend)
+                elif qstart <= feature.end and qend >= feature.end:
                     features.append(feature)
         return features
 
-
-
-
-    def prioritize(self, features, v=True, priority=PRIORITY):
+    def prioritize(
+            self, features, v=True,
+            transcript_priority=TRANSCRIPT_PRIORITY,
+            gene_priority=GENE_PRIORITY
+    ):
         """
         Groups each transcript feature into genes.
         """
-        hi = []  # contains highest priority genic feature for each gene
+        top_features = []
+        # hi = []  # contains highest priority genic feature for each gene
         genes = defaultdict(list)
         for feature in features:
             for gene_id in feature.attributes['gene_id']:
-                genes[gene_id].append(feature)
-        for gene, features in genes.iteritems():
-            features.sort(key=lambda x: priority.index(x.featuretype.upper()))
-        for gene_id, overlapping_features in genes.iteritems():
+                genes[gene_id].append(feature) # append features to their respective genes
+
+        for gene, features in genes.iteritems(): # for each transcript, iterate through feature list and prioritize
+            for feature in features:
+                if 'protein_coding' not in feature.attributes['transcript_type']:
+                    if v == True:
+                        print(feature.attributes['transcript_type'])
+                    if feature.featuretype == 'exon' or feature.featuretype == 'UTR':
+                        feature.featuretype = 'NONCODING_EXON'
+                    elif feature.featuretype == 'gene':
+                        feature.featuretype = 'NONCODING_INTRON'
+                if feature.featuretype == 'UTR':
+                    feature.featuretype = self._classify_utr(feature)
+            features.sort(key=lambda x: gene_priority.index(x.featuretype.upper()))
+            top_features.append(features[0])
+        """for gene_id, overlapping_features in genes.iteritems(): # iterate over each gene and prioritize according to genic region.
             if v == True:
                 print(gene_id)
                 for feature in overlapping_features:
                     print(feature.featuretype, feature.attributes['transcript_id'], feature.attributes['gene_id'], feature.start, feature.end)
             first_priority = overlapping_features[0]
             if first_priority.featuretype == 'UTR':
+                first_priority.featuretype = self._classify_utr(first_priority)"""
+        top_features.sort(key=lambda x: gene_priority.index(x.featuretype.upper()))
+        return "{}|{}".format(top_features[0].featuretype.replace('gene','INTRON'), top_features[0].attributes['gene_id'])
 
-                annotation = self._classify_utr(first_priority)
-            else:
-                annotation = first_priority.featuretype.replace('gene','INTRON')
-            hi.append('{}|{}'.format(annotation, gene_id))
-        return hi
+def annotate(db_file, bed_file, out_file):
+    pass
+
+def annotate_with_genes(db_file, bed_file, out_file):
+    """
+    Given a bed6 file, return the file with an extra column containing
+    '|' delimited gene annotations
+
+    :param db_file:
+    :param bed_file:
+    :param out_file:
+    :return:
+    """
+    annotator = Annotator(db_file)
+    bed_tool = pybedtools.BedTool(bed_file)
+    with open(out_file, 'w') as o:
+        for interval in bed_tool: # for each line in bed file
+            overlapping_features = annotator.get_all_overlapping_features_from_query(
+                interval.chrom,
+                interval.start,
+                interval.end,
+                interval.strand
+            )
+            to_append = '' # full list of genes overlapping features
+            genes = defaultdict(list)
+            for feature in overlapping_features: # for each overlapping feature
+                for gene_id in feature.attributes['gene_id']: # multiple genes can be associated with one feature
+                    genes[gene_id].append(feature)  # append features to their respective genes
+            for gene in genes.keys():
+                to_append = to_append + gene + '|'
+            o.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+                interval.chrom, interval.start,
+                interval.end, interval.name,
+                interval.score, interval.strand,
+                to_append[:-1] # we dont need last pipe
+            ))
