@@ -224,8 +224,62 @@ class Annotator():
         top_features.sort(key=lambda x: gene_priority.index(x.featuretype.upper()))
         return "{}|{}".format(top_features[0].featuretype.replace('gene','INTRON'), top_features[0].attributes['gene_id'])
 
+    def annotate(self, interval):
+        overlapping_features = self.get_all_overlapping_features_from_query(
+            interval.chrom,
+            interval.start,
+            interval.end,
+            interval.strand
+        )
+        to_append = ''  # full list of genes overlapping features
+        transcript = defaultdict(list)
+        for feature in overlapping_features:  # for each overlapping feature
+            for transcript_id in feature.attributes[
+                'transcript_id'
+            ]:  # multiple genes can be associated with one feature
+                transcript[transcript_id].append(
+                    feature)  # append features to their respective genes
+        for transcript, features in transcript.iteritems():
+            for feature in features:
+                if 'protein_coding' not in feature.attributes['transcript_type']:
+                    if feature.featuretype == 'exon' or feature.featuretype == 'UTR':
+                        feature.featuretype = 'noncoding_exon'
+                if feature.featuretype == 'UTR':
+                    feature.featuretype = self._classify_utr(feature)
+                to_append = to_append + "{}:{}:{}:{}:{}:".format(
+                    transcript,
+                    feature.start,
+                    feature.end,
+                    feature.strand,
+                    feature.featuretype,
+                )
+                for t in feature.attributes['transcript_type']:
+                    to_append = to_append + '{},'.format(t)
+                to_append = to_append[:-1] + '|'
+        return to_append[:-1]
+
 def annotate(db_file, bed_file, out_file):
-    pass
+    """
+    Given a bed6 file, return the file with an extra column containing
+    '|' delimited gene annotations
+
+    :param db_file:
+    :param bed_file:
+    :param out_file:
+    :return:
+    """
+    annotator = Annotator(db_file)
+    bed_tool = pybedtools.BedTool(bed_file)
+    with open(out_file, 'w') as o:
+        for interval in bed_tool:  # for each line in bed file
+            annotation = annotator.annotate(interval)
+            o.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
+                interval.chrom, interval.start,
+                interval.end, interval.name,
+                interval.score, interval.strand,
+                annotation  # we dont need last pipe
+            ))
+
 
 def annotate_with_genes(db_file, bed_file, out_file):
     """
