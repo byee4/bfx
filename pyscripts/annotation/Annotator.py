@@ -7,19 +7,16 @@ import copy
 
 GENE_PRIORITY = [
     ['protein_coding','CDS'],
-    ['protein_coding','3UTR'],
+    ['non_coding', 'CDS'],  # shouldn't occur?
     ['protein_coding','5UTR'],
+    ['protein_coding','3UTR'],
     ['protein_coding', 'THREE_AND_FIVE_PRIME_UTR'],
     ['protein_coding','intron'],
-    ['protein_coding','exon'], # shouldn't occur?
-    ['protein_coding','transcript'], # shouldn't occur?
-    ['protein_coding','gene'], # shouldn't occur?
-    ['non_coding','CDS'], # shouldn't occur?
     ['non_coding','3UTR'],
     ['non_coding','5UTR'],
     ['non_coding', 'THREE_AND_FIVE_PRIME_UTR'],
-    ['non_coding','intron'],
     ['non_coding','exon'],
+    ['non_coding','intron'],
     ['non_coding','transcript'],
     ['non_coding','gene'],
     ['protein_coding','start_codon'],
@@ -27,31 +24,35 @@ GENE_PRIORITY = [
     ['protein_coding','Selenocysteine'],
     ['non_coding','start_codon'],  # shouldn't occur?
     ['non_coding','stop_codon'],  # shouldn't occur?
+    ['protein_coding', 'exon'],  # shouldn't occur?
+    ['protein_coding', 'transcript'],  # shouldn't occur?
+    ['protein_coding', 'gene'],  # shouldn't occur?
+
     ['non_coding','Selenocysteine'],
 ]
 
 TRANSCRIPT_PRIORITY = [
     ['protein_coding','CDS'],
-    ['protein_coding','3UTR'],
     ['protein_coding','5UTR'],
-    ['protein_coding', 'THREE_AND_FIVE_PRIME_UTR'],
+    ['protein_coding','3UTR'],
     ['protein_coding','intron'],
-    ['protein_coding','exon'], # shouldn't occur?
-    ['protein_coding','transcript'], # shouldn't occur?
-    ['protein_coding','gene'], # shouldn't occur?
-    ['non_coding','CDS'], # shouldn't occur?
+    ['protein_coding', 'THREE_AND_FIVE_PRIME_UTR'],
     ['non_coding','3UTR'],
     ['non_coding','5UTR'],
     ['non_coding', 'THREE_AND_FIVE_PRIME_UTR'],
-    ['non_coding','intron'],
     ['non_coding','exon'],
+    ['non_coding','intron'],
     ['non_coding','transcript'],
     ['non_coding','gene'],
     ['protein_coding','start_codon'],
     ['protein_coding','stop_codon'],
     ['protein_coding','Selenocysteine'],
+    ['non_coding','CDS'], # shouldn't occur?
     ['non_coding','start_codon'],  # shouldn't occur?
     ['non_coding','stop_codon'],  # shouldn't occur?
+    ['protein_coding','exon'], # shouldn't occur?
+    ['protein_coding','transcript'], # shouldn't occur?
+    ['protein_coding','gene'], # shouldn't occur?
     ['non_coding','Selenocysteine'],
 ]
 
@@ -137,7 +138,6 @@ class Annotator():
         self.num_features = num_features
 
     def _update_introns(self):
-        progress = trange(self.num_features, leave=False)
         for hash_val, features in self.features_dict.iteritems():
             for feature in features:
                 if feature.featuretype == 'transcript':
@@ -153,7 +153,6 @@ class Annotator():
                             self.features_dict[hash_val].append(
                                 intron_feature
                             )
-            progress.update(1)
 
     def _get_all_cds_dict(self):
         """
@@ -309,19 +308,25 @@ class Annotator():
         features = []
         start_key = int(qstart / HASH_VAL)
         end_key = int(qend / HASH_VAL)
+        qstart = qstart + 1 # change 0-based bed to 1-based gff
+
         for i in range(start_key, end_key + 1):
             for feature in self.features_dict[chrom, i, strand]:
-                if qstart <= feature.start and qend >= feature.end:  # feature completely contains query
+                if qstart <= feature.start and qend > feature.end:  # feature completely contains query
                     features.append(feature)
-                elif qstart >= feature.start and qend <= feature.end:  # query completely contains feature
+                elif qstart >= feature.start and qend < feature.end:  # query completely contains feature
                     features.append(feature)
                 elif qstart <= feature.start and qend >= feature.start:  # feature partially overlaps (qstart < fstart < qend)
                     features.append(feature)
-                elif qstart <= feature.end and qend >= feature.end:  # feature partially overlaps (qstart < fend < qend)
+                elif qstart <= feature.end and qend > feature.end:  # feature partially overlaps (qstart < fend < qend)
                     features.append(feature)
         return features
 
-    def annotate(self, interval):
+    def annotate(
+            self, interval,
+            transcript_priority=TRANSCRIPT_PRIORITY,
+            gene_priority=GENE_PRIORITY
+    ):
         """
         Given an interval, annotates using the priority
 
@@ -334,6 +339,10 @@ class Annotator():
             interval.end,
             interval.strand
         )
+        if len(overlapping_features) == 0:
+            return 'intergenic'
+        else:
+            print(overlapping_features)
         to_append = ''  # full list of genes overlapping features
         transcript = defaultdict(list)
         for feature in overlapping_features:  # for each overlapping feature
@@ -366,10 +375,11 @@ class Annotator():
                     to_append += '{},'.format(t)
                 to_append = to_append[:-1] + '|'
         to_append = to_append[:-1]
+        # print(to_append)
         return self.prioritize_transcript_then_gene(
             self.parse_annotation_string(to_append),
-            TRANSCRIPT_PRIORITY,
-            GENE_PRIORITY
+            transcript_priority,
+            gene_priority
         )
 
     def parse_annotation_string(self, features_string):
@@ -389,9 +399,84 @@ class Annotator():
         :param transcript_type:
         :return:
         """
-        return True if transcript_type == 'protein_coding' else False
-
+        if transcript_type == 'protein_coding':
+            return True
+        return False
+    """
     def return_highest_priority_feature(self, formatted_features, priority):
+        """
+        # Given a list of formatted features, returns the one with the highest priority
+        """
+        # Build dict
+        combined_dict = defaultdict(list)
+        for feature_string in formatted_features:
+            transcript, start, end, strand, feature_type, gene_id, gene_name, transcript_type_list = feature_string.split(
+                ':')
+            transcript_type_list = transcript_type_list.split(',')
+            for transcript_type in transcript_type_list:
+                if self.is_protein_coding(
+                        transcript_type):  # simplify all the types at first
+                    combined_dict['protein_coding', feature_type].append(
+                        feature_string)
+                else:
+                    combined_dict['non_coding',  feature_type].append(
+                        feature_string)
+        # return the highest one
+        combined_dict = OrderedDict(
+            combined_dict)  # turn into ordered dict, is that ok?
+        combined_dict = sorted(  # sort based on priority list
+            combined_dict.iteritems(),
+            key=lambda x: priority.index([x[0][0], x[0][1]])
+        )
+        return combined_dict[0]
+
+    def prioritize_transcript_then_gene(self, formatted_features, gene_priority,
+                             transcript_priority):
+        """
+        # Group and prioritize for each transcript, then prioritize each #1
+        # transcript for each gene.
+
+        # :param formatted_features:
+        # :param gene_priority:
+        # :param transcript_priority:
+        # :return:
+        """
+        unique_transcripts = defaultdict(list)
+        unique_genes = defaultdict(list)
+        final = []
+        # print("INITIALIZING FUNC")
+        for feature_string in formatted_features:
+            if feature_string.split(':')[4] != 'gene':
+                unique_transcripts[feature_string.split(':')[0]].append(
+                    feature_string)
+        # print("FORMATTED FEATURES: ", formatted_features)
+        # print("UNIQUE TRANSCRIPTS: ", unique_transcripts)
+        for transcript in unique_transcripts.keys():  #
+            # print("TRANSCRIPT: {}".format(transcript))
+            # print("UNIQUE TRANSCRIPTS[TRANSCRIPT]: ", unique_transcripts[transcript])
+            for t in unique_transcripts[transcript]:
+                # print("T", t)
+                genes = t.split(':')[5]
+                for gene in genes.split(','):
+                    unique_genes[gene].append(
+                        self.return_highest_priority_feature(
+                            unique_transcripts[transcript],
+                            transcript_priority
+                        )[1][0]  # [0] contains the dictionary key
+                    )
+        for gene, transcripts in unique_genes.iteritems():
+            for transcript in transcripts:
+                final.append(transcript)
+        feature_type, final = self.return_highest_priority_feature(
+            final, gene_priority
+        )
+        if len(final) > 0:
+            return final[0]
+        else:
+            return 'intergenic'
+    """
+
+    def return_highest_priority_feature(formatted_features, priority):
         """
         Given a list of formatted features, returns the one with the highest priority
         """
@@ -402,7 +487,7 @@ class Annotator():
                 ':')
             transcript_type_list = transcript_type_list.split(',')
             for transcript_type in transcript_type_list:
-                if self.is_protein_coding(
+                if is_protein_coding(
                         transcript_type):  # simplify all the types at first
                     combined_dict['protein_coding', feature_type].append(
                         feature_string)
@@ -418,44 +503,55 @@ class Annotator():
         )
         return combined_dict[0]
 
-    def prioritize_transcript_then_gene(self, formatted_features, gene_priority,
-                             transcript_priority):
-        """
-        Group and prioritize for each transcript, then prioritize each #1
-        transcript for each gene.
+def prioritize_transcript_then_gene(formatted_features, gene_priority,
+                         transcript_priority):
+    """
+    Group and prioritize for each transcript, then prioritize each #1
+    transcript for each gene.
 
-        :param formatted_features:
-        :param gene_priority:
-        :param transcript_priority:
-        :return:
-        """
-        unique_transcripts = defaultdict(list)
-        unique_genes = defaultdict(list)
-        final = []
+    :param formatted_features:
+    :param gene_priority:
+    :param transcript_priority:
+    :return:
+    """
+    unique_transcripts = defaultdict(list)
+    unique_genes = defaultdict(list)
+    final = []
 
-        for feature_string in formatted_features:
-            if feature_string.split(':')[4] != 'gene':
-                unique_transcripts[feature_string.split(':')[0]].append(
-                    feature_string)
-        for transcript in unique_transcripts.keys():  #
-            gene = unique_transcripts[transcript][1].split(':')[5]
+    for feature_string in formatted_features:
+        if feature_string.split(':')[4] != 'gene':
+            print("appending: {}".format(feature_string))
+            unique_transcripts[feature_string.split(':')[0]].append(
+                feature_string)
+    for transcript in unique_transcripts.keys():  #
+        print("parsing transcripts: {}".format(transcript))
+        genes = unique_transcripts[transcript][1].split(':')[5]
+        for gene in genes.split(','):
             unique_genes[gene].append(
-                self.return_highest_priority_feature(
+                return_highest_priority_feature(
                     unique_transcripts[transcript],
                     transcript_priority
                 )[1][0]  # [0] contains the dictionary key
             )
-        for gene in unique_genes.keys():
-            final.append(
-                self.return_highest_priority_feature(
-                    unique_genes[gene], gene_priority
-                )[1][0]
-            )
-        if len(final) > 0:
-            return final[0]
-        else:
-            return 'intergenic'
+            print("appended=: {}".format(self.return_highest_priority_feature(
+                    unique_transcripts[transcript],
+                    transcript_priority
+                )[1][0]))  # [0] contains the dictionary key))
+    print("DONE GETTING HI PRIORITY TRANSCRIPTS.")
+    print("GENES##############################")
 
+    for gene, transcripts in unique_genes.iteritems():
+        for transcript in transcripts:
+            final.append(transcript)
+    print('final', final)
+    final = self.return_highest_priority_feature(
+        final, gene_priority
+    )[1]
+    print("FINAL", final)
+    if len(final) > 0:
+        return final[0]
+    else:
+        return 'intergenic'
 def annotate(db_file, bed_file, out_file, chroms):
     """
     Given a bed6 file, return the file with an extra column containing

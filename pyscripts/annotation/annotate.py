@@ -24,6 +24,13 @@ def main():
         help="gtf database file create from gffutils",
         required=True
     )
+    parser.add_argument(
+        "--limit-chroms-to",
+        dest="limit_chroms_to",
+        required=False,
+        nargs='+',
+        default=[]
+    )
     try:
         args = parser.parse_args()
     except:
@@ -33,8 +40,10 @@ def main():
     input_bed_file = args.input
     output_annotated_file = args.output
     gtfdb_file = args.gtfdb
+    chroms = args.limit_chroms_to
+
     Annotator.annotate(
-        gtfdb_file, input_bed_file, output_annotated_file
+        gtfdb_file, input_bed_file, output_annotated_file, chroms
     )
 
 if __name__ == "__main__":
