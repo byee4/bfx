@@ -7,7 +7,8 @@ import copy
 
 GENE_PRIORITY = [
     ['protein_coding','CDS'],
-    ['non_coding', 'CDS'],  # shouldn't occur?
+    ['protein_coding','start_codon'],
+    ['protein_coding','stop_codon'],
     ['protein_coding','5UTR'],
     ['protein_coding','3UTR'],
     ['protein_coding', 'THREE_AND_FIVE_PRIME_UTR'],
@@ -19,20 +20,20 @@ GENE_PRIORITY = [
     ['non_coding','3UTR'],
     ['non_coding','5UTR'],
     ['non_coding', 'THREE_AND_FIVE_PRIME_UTR'],
-    ['protein_coding','start_codon'],
-    ['protein_coding','stop_codon'],
     ['protein_coding','Selenocysteine'],
+    ['non_coding', 'CDS'],  # shouldn't occur?
     ['non_coding','start_codon'],  # shouldn't occur?
     ['non_coding','stop_codon'],  # shouldn't occur?
     ['protein_coding', 'exon'],  # shouldn't occur?
     ['protein_coding', 'transcript'],  # shouldn't occur?
     ['protein_coding', 'gene'],  # shouldn't occur?
-
     ['non_coding','Selenocysteine'],
 ]
 
 TRANSCRIPT_PRIORITY = [
     ['protein_coding','CDS'],
+    ['protein_coding','start_codon'],
+    ['protein_coding','stop_codon'],
     ['protein_coding','5UTR'],
     ['protein_coding','3UTR'],
     ['protein_coding','intron'],
@@ -44,8 +45,6 @@ TRANSCRIPT_PRIORITY = [
     ['non_coding','3UTR'],
     ['non_coding','5UTR'],
     ['non_coding', 'THREE_AND_FIVE_PRIME_UTR'],
-    ['protein_coding','start_codon'],
-    ['protein_coding','stop_codon'],
     ['protein_coding','Selenocysteine'],
     ['non_coding','CDS'], # shouldn't occur?
     ['non_coding','start_codon'],  # shouldn't occur?
@@ -320,6 +319,8 @@ class Annotator():
                     features.append(feature)
                 elif qstart <= feature.end and qend >= feature.end:  # feature partially overlaps (qstart < fend < qend)
                     features.append(feature)
+        if qstart == 65419400:
+            print(features)
         return features
 
     def annotate(
@@ -373,7 +374,7 @@ class Annotator():
                     to_append += '{},'.format(t)
                 to_append = to_append[:-1] + '|'
         to_append = to_append[:-1]
-        print(feature.start, feature.end, feature.strand, to_append)
+        # print(feature.start, feature.end, feature.strand, to_append)
         return self.prioritize_transcript_then_gene(
             self.parse_annotation_string(to_append),
             transcript_priority,
