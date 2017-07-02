@@ -143,7 +143,7 @@ def run_subset_rmats_junctioncountonly(i, o, e):
         input junctionCountsOnly file from rMATS
     o : basestring
         output junctionCountsOnly file with just the highest-IJC events
-    e : basetring
+    e : basestring
         event string that specifies the area upon which to compare. For
         example, 'se' will compare regions between the 5' and 3' splice site
         of the upstream and downstream exons. 'a3ss' will compare regions
@@ -152,8 +152,8 @@ def run_subset_rmats_junctioncountonly(i, o, e):
 
     Returns
     -------
-    None :
-        writes to a file
+    merged_w_index : pandas.DataFrame
+        merged (bedtools merge -o 'collapse' -c 4) as a dataframe
     """
     starting_df = pd.read_table(i)
 
@@ -190,6 +190,7 @@ def run_subset_rmats_junctioncountonly(i, o, e):
 
     final_subset.to_csv(o, sep=SEP, index=None)
 
+    return merged_w_index
 
 """
 

@@ -25,6 +25,7 @@ REGIONS = {
     '5utr_and_3utr':palette[7]
 }
 
+
 def plot_ip_foldchange_over_input_reads(
         ip_l2fc, inp_reads_by_loc,
         out_file,

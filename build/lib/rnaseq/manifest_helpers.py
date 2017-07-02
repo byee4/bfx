@@ -165,7 +165,7 @@ def get_annotations_from_splicing_prefix(
                      splicing_prefix) + "*" + neg_splicing_suffix
     )
 
-    if (len(positive) == 1 and len(negative) == 1):
+    if len(positive) == 1 and len(negative) == 1:
         return positive[0], negative[0]
     else:
         return None, None

@@ -12,6 +12,7 @@ import numpy as np
 import os
 import pandas as pd
 import seaborn as sns
+import pybedtools
 import sys
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -463,6 +464,15 @@ def run_num_differential_events(
         clip_manifest_df, rnaseq_manifests_dict, annotation_dir,
         pos_suffix, neg_suffix
 ):
+    """
+
+    :param clip_manifest_df:
+    :param rnaseq_manifests_dict:
+    :param annotation_dir:
+    :param pos_suffix:
+    :param neg_suffix:
+    :return:
+    """
     pos = defaultdict(dict)
     neg = defaultdict(dict)
     tot = defaultdict(dict)
@@ -544,11 +554,157 @@ def run_num_differential_events(
 
     return merged
 
+"""
+This group of functions can be used to generate non-overlapping intervals
+from an RMATS file. We've routinely had to deal with integrating eCLIP data
+sets, but our alternative splice program (RMATS) returns overlapping intervals,
+which when intersected with eCLIP, may double/multiply count the same regions.
+
+This is the less conservative approach to
+"""
+
+def make_rmats_bedtool_from_se(df):
+    """
+    Uses the skipped exon start and end to create a bedtool
+    :param df: pandas.DataFrame()
+        table from a pd.read_table(rmats_JunctionCountsOnly_file)
+    :return bt : pybedtools.BedTool()
+        BedTool using the exonStart_0base, exonEnd as boundaries
+        and IncLevelDifference as the score.
+
+    """
+
+    df = df[['chr', 'exonStart_0base', 'exonEnd', 'geneSymbol',
+             'IncLevelDifference', 'strand']]
+    bt = pybedtools.BedTool.from_dataframe(df)
+    bt = bt.sort()
+    return bt
+
+
+def make_bedtool(df):
+    """
+    I can't figure out why the BedTool() function isn't working...
+    Probably has something to do with turning positions into floats,
+    but this function is works just the same...
+    """
+    intervals = []
+
+    for col, row in df.iterrows():
+        intervals.append(
+            pybedtools.create_interval_from_list(
+                [str(row['chrom']), str(row['start']),
+                 str(row['end']), str(row['name']),
+                 str(row['score']), str(row['strand'])]
+            )
+        )
+    return pybedtools.BedTool(intervals)
+
+
+def redefine_regions(df):
+    """
+    Turns overlapping regions into distinct nonoverlapping regions.
+
+    :param df: pandas.Dataframe()
+        The to_dataframe() result of bedtools cluster call
+    :return BedTool(non-overlapping interval): pybedtools.BedTool()
+        The BedTool of nonoverlapping intervals.
+    """
+
+    positions = []
+    intervals = []
+    for col, row in df.iterrows():
+        chrom = row['chrom']
+        strand = row['strand']
+        positions.append(row['start'])
+        positions.append(row['end'])
+    positions = sorted(set(positions))
+    for p in range(0, len(positions[:-1])):
+        intervals.append(pybedtools.create_interval_from_list(
+            [chrom, str(positions[p]), str(positions[p + 1]), 'name', '0',
+             strand]
+        ))
+    return pybedtools.BedTool(intervals)
+
+
+def rescore(to_split):
+    """
+    Takes a dataframe of overlapping intervals,
+    and returns nonoverlapping regions, scored by
+    either taking the average of the original overlapping region,
+    or by taking the single score over the nonoverlapping
+    regions.
+
+    :param to_split: pandas.DataFrame
+        Dataframe containing potentially overlapping intervals.
+    :return final_split: pandas.DataFrame
+        Dataframe containing non-overlapping regions described as
+        columns: [['chrom','start','end','name','score','strand']],
+        where name is the name of the first overlapping region found,
+        and score is either the score of the original non-overlapped
+        region, or the average of all overlapped regions.
+    """
+
+    name = to_split['name'].value_counts()[
+        0]  # just take the first name, i don't really care about the name part anyway
+    final_split = pd.DataFrame(
+        make_bedtool(to_split).intersect(
+            redefine_regions(to_split)).to_dataframe().groupby(
+            ['chrom', 'start', 'end', 'strand'])['score'].mean()
+    ).reset_index()
+    final_split['name'] = name
+    final_split = final_split[
+        ['chrom', 'start', 'end', 'name', 'score', 'strand']]
+    return final_split
+
+
+def create_non_overlapping_regions_from_rmats(rmats_file):
+    """
+    Takes a dataframe from an RMATS file and turns it into a BedTool.
+
+    Calls 'pybedtools.cluster().to_dataframe()', which groups overlapping
+    regions using the 'thickStart' column.
+
+    For each group, if there is only one region within the group, do nothing
+    (concat to merged). If there is more than one region, this means we have
+    overlapping intervals. Then it must call rescore() to split these regions
+    into nonoverlapping intervals.
+    """
+    df = pd.read_table(rmats_file)
+    dfx = make_rmats_bedtool_from_se(df)
+    dfy = dfx.cluster().to_dataframe()
+    merged = pd.DataFrame(
+        columns=['chrom', 'start', 'end', 'name', 'score', 'strand',
+                 'thickStart'])
+    groups = set(dfy['thickStart'])
+    progress = tnrange(len(groups))
+    for g in groups:
+        dft = dfy[dfy['thickStart'] == g]  # get all overlapping regions
+        if dft.shape[0] > 1:
+            merged = pd.concat([merged, rescore(dft)])
+        else:
+            merged = pd.concat([merged, dft])
+        progress.update(1)
+    merged = merged[['chrom', 'start', 'end', 'name', 'score', 'strand']]
+    return merged
 
 
 def main(argv=None):  # IGNORE:C0111
 
-    '''Command line options.'''
+    """
+    Creates the heatmap given:
+        eclip submitted manifest,
+        xintao's rna-seq manifest (k562),
+        xintao's rna-seq manifest (hepg2),
+        annotation-directory,
+        annotation sub-directory,
+        positive-suffix (AKA JunctionCountOnly[[.positive.nr.txt]]),
+        negative-suffix (AKA JunctionCountOnly[[.negative.nr.txt]]),
+        output file for heatmap figure
+
+    :param argv:
+    :return:
+        heatmap image file
+    """
 
     if argv is None:
         argv = sys.argv

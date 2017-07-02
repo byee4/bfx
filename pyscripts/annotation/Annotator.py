@@ -442,14 +442,14 @@ class Annotator():
             top_transcript = self.return_highest_priority_feature(
                 unique_transcript_features[transcript],
                 transcript_priority
-            )[1][0]  # [0] contains the dictionary key
+            )[1][0]  # first [0] contains the dictionary key, second [0] contains first priority
             unique_transcripts[transcript].append(
                 top_transcript
             )
             # add gene key
             gene_list = top_transcript.split(':')[5].split(',')
             for gene in gene_list:
-                unique_genes[gene].append(top_transcript)
+                unique_genes[gene].append(top_transcript) # i guess multiple genes can be associated with one transcript??
 
         ### PRIORITIZE GENE ###
         for gene, transcripts in unique_genes.iteritems():
