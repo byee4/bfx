@@ -34,7 +34,15 @@ def split_uid_and_rep(name):
     return uid, rep, others
 
 
-def get_clip_file_from_uid(clip, rbp_uid):
+def get_clip_file_from_uid(
+        clip, rbp_uid,
+        uid_col='uID',
+        rbp_col='RBP',
+        cell_line_col='Cell line',
+        clip_r1_col='CLIP_rep1',
+        clip_r2_col='CLIP_rep2',
+        input_col='INPUT'
+):
     """
     Returns attributes from the submitted CLIP manifest given an id
 
@@ -59,13 +67,16 @@ def get_clip_file_from_uid(clip, rbp_uid):
         HepG2 or K562 usually, could be anything in the "Cell line" column
     """
     # clip = pd.read_table(manifest_file)
-    rbp_df = clip[clip['uID'] == rbp_uid]
-    clip_rbp = rbp_df['RBP'].to_string(index=False, header=False)
-    clip_celltype = rbp_df['Cell line'].to_string(index=False, header=False)
-    clip_rep1 = rbp_df['CLIP_rep1'].to_string(index=False, header=False)
-    clip_rep2 = rbp_df['CLIP_rep2'].to_string(index=False, header=False)
-    input_rep = rbp_df['INPUT'].to_string(index=False, header=False)
-    return clip_rep1, clip_rep2, input_rep, clip_rbp, clip_celltype
+    rbp_df = clip[clip[uid_col] == rbp_uid]
+    if rbp_df.shape[0] == 0:
+        return None, None, None, None, None
+    else:
+        clip_rbp = rbp_df[rbp_col].to_string(index=False, header=False)
+        clip_celltype = rbp_df[cell_line_col].to_string(index=False, header=False)
+        clip_rep1 = rbp_df[clip_r1_col].to_string(index=False, header=False)
+        clip_rep2 = rbp_df[clip_r2_col].to_string(index=False, header=False)
+        input_rep = rbp_df[input_col].to_string(index=False, header=False)
+        return clip_rep1, clip_rep2, input_rep, clip_rbp, clip_celltype
 
 
 def get_rnaseq_splicing_prefix_from_rbpname(

@@ -3,10 +3,9 @@ from distutils.core import setup
 setup(
     name='bfx',
     version='',
-    packages=['pyscripts', 'misc', 'crispr', 'encode', 'rnaseq',
+    packages=['pyscripts', 'crispr', 'encode', 'rnaseq',
               'clipseq', 'general', 'pathway', 'assembly'],
     package_dir={
-        'misc':'pyscripts/misc',
         'crispr':'pyscripts/crispr',
         'encode':'pyscripts/encode',
         'rnaseq':'pyscripts/rnaseq',

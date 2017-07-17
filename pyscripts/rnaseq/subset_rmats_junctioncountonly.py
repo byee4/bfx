@@ -38,11 +38,14 @@ def get_avg_inclusion_count(row):
     The average inclusion junction count across all samples
     (2 reps, 2 conditions)
     """
-    s1a, s1b = row['IJC_SAMPLE_1'].split(',')
+    if 'IJC_SAMPLE_1' in row.index and 'IJC_SAMPLE_2' in row.index: # from rmats
+        s1a, s1b = row['IJC_SAMPLE_1'].split(',')
 
-    s2a, s2b = row['IJC_SAMPLE_2'].split(',')
-    return (int(s1a) + int(s1b) + int(s2a) + int(s2b)) / 4.0
-
+        s2a, s2b = row['IJC_SAMPLE_2'].split(',')
+        return (int(s1a) + int(s1b) + int(s2a) + int(s2b)) / 4.0
+    elif 'incl' in row.index: # from eric's bg annotation
+        s1a, s2a = row['incl'].split(',')
+        return (int(s1a) + int(s2a))/2.0
 
 def get_jx_region_as_interval(row, x, event='se'):
     """
@@ -131,7 +134,7 @@ def determine_event_to_keep(df, indices):
     return max_idx
 
 
-def run_subset_rmats_junctioncountonly(i, o, e):
+def run_subset_rmats_junctioncountonly(i, o, e, t='rmats'):
     """
     Given a junctioncountsonly file (i) of events (e), returns a file (o)
     containing unique non-overlapping events prioritized by inclusion junction
@@ -149,6 +152,8 @@ def run_subset_rmats_junctioncountonly(i, o, e):
         of the upstream and downstream exons. 'a3ss' will compare regions
         between the end of the flanking upstream exon and the splice site
         between the long/short alternative exon boundary.
+    t : basestring
+        either 'rmats' format or 'eric' format
 
     Returns
     -------
@@ -157,13 +162,31 @@ def run_subset_rmats_junctioncountonly(i, o, e):
     """
     starting_df = pd.read_table(i)
 
+    ### Need to add in column names for eric's stuff to make it more clear ###
+    if t == 'eric':
+        if e == 'se' or e == 'ri' or e == 'mxe':
+            starting_df.columns = ['annotation','low_exon','skipped_exon',
+                                   'hi_exon','incl','excl']
+        elif e == 'a3ss':
+            starting_df.columns = ['annotation', 'upstream_exon', 'long_exon',
+                                   'short_exon', 'incl', 'excl']
+        elif e == 'a5ss':
+            starting_df.columns = ['annotation', 'short_exon', 'long_exon',
+                                   'downstream_exon', 'incl', 'excl']
+        else:
+            print('invalid event')
+            return 1
+
     """ append average IJC column to dataframe """
     starting_df['avgIJC'] = starting_df.apply(get_avg_inclusion_count, axis=1)
 
     """ dataframe to bedtool conversion """
     bedtools = []
     for ix, row in starting_df.iterrows():
-        bedtools.append(get_jx_region_as_interval(row, ix, e))
+        if t == 'rmats':
+            bedtools.append(get_jx_region_as_interval(row, ix, e))
+        elif t == 'eric':
+            bedtools.append(get_jx_region_as_interval_eric(row, ix, e))
     df_as_bedtool = bt.BedTool(bedtools)
     df_as_bedtool_sorted = df_as_bedtool.sort()
 
@@ -191,6 +214,62 @@ def run_subset_rmats_junctioncountonly(i, o, e):
     final_subset.to_csv(o, sep=SEP, index=None)
 
     return merged_w_index
+
+def get_jx_region_as_interval_eric(row, x, event='se'):
+    """
+    returns a BedTools interval given an rmats annotation row spanning
+    from the upstream-end to the downstream-start.
+
+    Parameters
+    ----------
+    row : pandas.core.series.Series
+        single row of a rMATS file
+    x : basestring
+        name given to the bedtools interval
+    Returns
+    -------
+    pybedtools.BedTool.Interval
+    """
+    chrom, strand, _, _, _ = row['annotation'].split('|')
+
+    if event == 'se' or event == 'mxe' or event == 'ri':
+        low_start, low_end = [int(ex) for ex in row['low_exon'].split('-')]
+        hi_start, hi_end = [int(ex) for ex in row['hi_exon'].split('-')]
+        interval = bt.create_interval_from_list(
+            [chrom, low_end, hi_start, x, '0',
+             strand])
+    elif event == 'a3ss':
+        flank_start, flank_end = [int(ex) for ex in
+                                  row['upstream_exon'].split('-')]
+        short_start, short_end = [int(ex) for ex in
+                                  row['short_exon'].split('-')]
+
+        if strand == '+':
+            interval = bt.create_interval_from_list(
+                [chrom, flank_end, short_start, x, '0',
+                 strand])
+        else:
+            interval = bt.create_interval_from_list(
+                [chrom, short_end, flank_start, x, '0',
+                 strand]
+            )
+    elif event == 'a5ss':
+        flank_start, flank_end = [int(ex) for ex in
+                                  row['downstream_exon'].split('-')]
+        short_start, short_end = [int(ex) for ex in
+                                  row['short_exon'].split('-')]
+
+        if strand == '+':
+            interval = bt.create_interval_from_list(
+                [chrom, short_end, flank_start, x, '0',
+                 strand])
+        else:
+            interval = bt.create_interval_from_list(
+                [chrom, flank_end, short_start, x, '0',
+                 strand]
+            )
+    return interval
+
 
 """
 
@@ -357,6 +436,12 @@ which when intersected with eCLIP, may double/multiply count the same regions.
                         dest="o",
                         required=True,
                         help='output rMATS junctioncountsonly nonoverlapping')
+    parser.add_argument("-f", "--filetype",
+                        dest="f",
+                        required=False,
+                        default='rmats',
+                        help='[rmats] or erics special format',
+                        )
     parser.add_argument("-e", "--event",
                         dest="e",
                         required=False,
@@ -367,11 +452,12 @@ which when intersected with eCLIP, may double/multiply count the same regions.
     args = parser.parse_args()
 
     # io
-    i = args.i
-    o = args.o
-    e = args.e
+    input_file = args.i
+    output_file = args.o
+    event = args.e
+    filetype = args.f
 
-    run_subset_rmats_junctioncountonly(i, o, e)
+    run_subset_rmats_junctioncountonly(input_file, output_file, event, filetype)
 
 if __name__ == "__main__":
     if DEBUG:
