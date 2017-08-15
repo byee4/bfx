@@ -122,8 +122,8 @@ def filter_input_norm_as_df(file_name, l2fc, pval, out_file=None):
     filtered : pybedtools.BedTool()
 
     """
-    return filter_input_norm(file_name, l2fc, pval, out_file).to_dataframe()
-
+    df = filter_input_norm(file_name, l2fc, pval, out_file).to_dataframe()
+    return df
 
 def filter_input_norm(file_name, l2fc, pval, out_file=None):
     """
@@ -136,7 +136,7 @@ def filter_input_norm(file_name, l2fc, pval, out_file=None):
     file_name : basename
     l2fc : float
     pval : float
-    out_file : basename
+    out_file : basestring
 
     Returns
     -------
@@ -144,18 +144,21 @@ def filter_input_norm(file_name, l2fc, pval, out_file=None):
 
     """
     try:
+
+
+        # df = pd.read_table(file_name, names=ANNOTATED_BED_HEADERS)
+        # df = df[(df['pv']>float(pval)) & (df['fc']>float(l2fc))]
+        # bedtool = pybedtools.BedTool.from_dataframe(df)
         bedtool = pybedtools.BedTool(file_name)
-
         filter_data_inst = functools.partial(filter_data, l2fc=l2fc, pval=pval)
-
-        bedtool = bedtool.filter(filter_data_inst)
-
+        bedtool = bedtool.filter(filter_data_inst).saveas()
         if out_file is not None:
             bedtool.saveas(out_file)
 
         return bedtool
 
     except Exception as e:
+        print(e)
         return 1
 
 
@@ -242,7 +245,7 @@ def get_counts(wd, out_dir, l2fc, l10p, suffix='.annotated'):
                 )
             ),
         )
-        df = filter_input_norm_as_df(f, out_file, l2fc, l10p)
+        df = filter_input_norm_as_df(f, l2fc, l10p, out_file)
         df.columns = ANNOTATED_BED_HEADERS
 
 
