@@ -1,6 +1,6 @@
 '''
 Created on Apr 24, 2015
-
+Interleaves read1 and read2 paired fastqs
 @author: http://news.open-bio.org/news/author/peterc/
 '''
 

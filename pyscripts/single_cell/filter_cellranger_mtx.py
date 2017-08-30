@@ -79,10 +79,11 @@ def create_new_mtx_file(df, new_mtx_file):
 
 def filter_by_names(df, names_list):
     """
+    Returns a filtered dataframe based on indices specified by names_list.
 
-    :param df:
-    :param names_list:
-    :return:
+    :param df: pandas.DataFrame()
+    :param names_list: list
+    :return filtered_df: pandas.DataFrame
     """
     return df.ix[names_list]
 
@@ -92,9 +93,9 @@ def filter(mtx_file, genes_file, barcodes_file, names_file,
     """
     main function.
 
-    :param mtx_file:
-    :param genes_file:
-    :param barcodes_file:
+    :param mtx_file: string
+    :param genes_file: string
+    :param barcodes_file: string
     :return:
     """
 
@@ -133,7 +134,9 @@ def filter(mtx_file, genes_file, barcodes_file, names_file,
 
 def main():
     """
-    Main program.
+    Filters an mtx file from cellranger given certain criteria.
+    --mtx, --genes, and --barcodes are typically in a folder
+    called outs/filtered_gene_bc_matrices/$SPECIES/
 
     """
     parser = argparse.ArgumentParser()

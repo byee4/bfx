@@ -21,6 +21,15 @@ def build_template(page,term):
         template.write(bytes(get_abstract(find_link(title)[0]),'UTF-8'))
         
 def list_title(term,with_link=True):
+    """
+    Scrapes NCBI for publications using a given term
+
+    :param term: string
+        search term
+    :param with_link: boolean
+        if True, return link otherwise return just the title
+    :return:
+    """
     from urllib.request import urlopen
     import re
     
@@ -50,8 +59,17 @@ def list_title(term,with_link=True):
             titles.append(title.decode(encoding))
     return(titles)
 
-# usage: print(get_abstract("http://www.ncbi.nlm.nih.gov/pubmed/25090088",1))
+#
 def get_abstract(link,style=True):
+    """
+    Returns the abstract given an ncbi link.
+
+    usage: print(get_abstract("http://www.ncbi.nlm.nih.gov/pubmed/25090088",1))
+
+    :param link: string
+    :param style: boolean
+    :return:
+    """
     from urllib.request import urlopen
     import re
     
@@ -72,9 +90,21 @@ def get_abstract(link,style=True):
     return abstract_all if style is True else abstract
 
 def full_link(root,rel):
-    return root + rel
+    """
+    Appends relative current path to base
+
+    :param root: string
+    :param rel: string
+    :return:
+    """
+    return os.path.join(root, rel)
 
 def find_link(line):
+    """
+    Given a string, return the
+    :param line:
+    :return:
+    """
     import re
     url_regex = '(?:[*]*?\s+)?http://([^>]*)'
     url_pattern = re.compile(url_regex)
@@ -84,10 +114,28 @@ def find_link(line):
 from Bio import Entrez, Medline
 from datetime import datetime
 
-# Make sure you change this to your email
-Entrez.email = 'brianfbb@yahoo.com'
 
-def fetch(t, s):
+
+def fetch(t, s, email='brianfbb@yahoo.com'):
+    """
+
+    usage:
+
+    print('-- Sort by publication date --\n')
+    fetch('Dmel wings', 'pub date')
+
+    print('-- Sort by first author --\n')
+    fetch('Dmel wings', 'author')
+
+    :param t: string
+        search term
+    :param s: string
+        sort_by
+    :return:
+    """
+    # Make sure you change this to your email
+    Entrez.email = email
+
     h = Entrez.esearch(db='pubmed', term=t, retmax=5, sort=s)
     idList = Entrez.read(h)['IdList']
 
@@ -107,9 +155,4 @@ def fetch(t, s):
                     "Publication Date: %s\nPMID: %s\n" % (title, author,
                         source, pub_date, pmid))
 
-print('-- Sort by publication date --\n')
-fetch('Dmel wings', 'pub date')
-
-print('-- Sort by first author --\n')
-fetch('Dmel wings', 'author')
 
