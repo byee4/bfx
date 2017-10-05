@@ -102,7 +102,7 @@ def scatter_matrix(ip_l2fc, inp_reads_by_loc):
     return x
 
 
-def filter_input_norm_as_df(file_name, l2fc, pval, out_file=None):
+def filter_input_norm_as_df(file_name, l2fc, pval, col_names, out_file=None):
     """
     Convenience method for me.
 
@@ -122,10 +122,10 @@ def filter_input_norm_as_df(file_name, l2fc, pval, out_file=None):
     filtered : pybedtools.BedTool()
 
     """
-    df = filter_input_norm(file_name, l2fc, pval, out_file).to_dataframe()
+    df = filter_input_norm(file_name, l2fc, pval, col_names, out_file).to_dataframe()
     return df
 
-def filter_input_norm(file_name, l2fc, pval, out_file=None):
+def filter_input_norm(file_name, l2fc, pval, col_names, out_file=None, fc_col='fc', pv_col='pv'):
     """
     Filters an "input norm"-formatted file given
     log2 fold change and log10 pvalue thresholds.
@@ -146,14 +146,10 @@ def filter_input_norm(file_name, l2fc, pval, out_file=None):
     try:
 
 
-        # df = pd.read_table(file_name, names=ANNOTATED_BED_HEADERS)
-        # df = df[(df['pv']>float(pval)) & (df['fc']>float(l2fc))]
-        # bedtool = pybedtools.BedTool.from_dataframe(df)
-        bedtool = pybedtools.BedTool(file_name)
-        filter_data_inst = functools.partial(filter_data, l2fc=l2fc, pval=pval)
-        bedtool = bedtool.filter(filter_data_inst).saveas()
-        if out_file is not None:
-            bedtool.saveas(out_file)
+        df = pd.read_table(file_name, names=col_names)
+        df = df[(df[pv_col]>=float(pval)) & (df[fc_col]>=float(l2fc))]
+        bedtool = pybedtools.BedTool.from_dataframe(df)
+
 
         return bedtool
 
@@ -203,7 +199,7 @@ def bed6_to_bed8(interval):
     return interval
 
 
-def return_region(row):
+def return_region_eric(row):
     """
     Given a row of a inputnormed bedfile, return region
     Row must be in the same format as a line in Eric's
@@ -221,7 +217,25 @@ def return_region(row):
         print(row)
 
 
-def get_counts(wd, out_dir, l2fc, l10p, suffix='.annotated'):
+def return_region_brian(row):
+    """
+    Given a row of a inputnormed bedfile, return region
+    Row must be in the same format as a line in Eric's
+    *.annotated file.
+
+    """
+    try:
+        if row['annotation'] == 'intergenic':
+            return 'intergenic'
+        region = row['annotation'].split('|')[0]
+        print("WARNING: FUNCTION UNIMPLEMENTED")
+        return region
+    except Exception as e:
+        print(e)
+        print(row)
+
+
+def get_counts(wd, out_dir, l2fc, l10p, suffix, col_names, regions, annotation_source='eric'):
     """
     Returns the number of peak counts for all regions
     annotated by eric's pipeline.
@@ -236,24 +250,31 @@ def get_counts(wd, out_dir, l2fc, l10p, suffix='.annotated'):
 
     for f in glob.glob(os.path.join(wd, '*{}'.format(suffix))):
         basename = os.path.basename(f)
-        out_file = os.path.join(
-            out_dir,
-            basename.replace(
-                '{}'.format(suffix),
-                '{}.filtered-p{}-f{}'.format(
-                    suffix, l10p, l2fc
-                )
-            ),
+        if out_dir is not None:
+            out_file = os.path.join(
+                out_dir,
+                basename.replace(
+                    '{}'.format(suffix),
+                    '{}.filtered-p{}-f{}'.format(
+                        suffix, l10p, l2fc
+                    )
+                ),
+            )
+        else:
+            out_file = None
+        df = filter_input_norm_as_df(
+            f, l2fc, l10p, col_names, out_file
         )
-        df = filter_input_norm_as_df(f, l2fc, l10p, out_file)
-        df.columns = ANNOTATED_BED_HEADERS
-
 
         samples[basename] = {}
-        df['region'] = df.apply(return_region, axis=1)
+        if annotation_source == 'eric':
+            df['region'] = df.apply(return_region_eric, axis=1)
+        elif anotation_source == 'brian':
+            df['region'] = df.apply(return_region_brian, axis=1)
+
         for key, value in df['region'].value_counts().iteritems():
             samples[basename][key] = value
-        for region in REGIONS:
+        for region in regions:
             if region not in samples[basename]:
                 samples[basename][region] = 0
     return pd.DataFrame(samples)
