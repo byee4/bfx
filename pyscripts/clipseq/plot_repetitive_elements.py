@@ -290,9 +290,26 @@ def get_ref_cov(row):
     return row[row['ref']]
 
 
-def get_position_matrix(bam, chrom, start, maxlen, reffile, stepper='all'):
+def get_position_matrix(bam, chrom, start, stop, reffile, stepper='all'):
+    """
+    Given a coordinate range, return a dataframe containing positional
+    coverage.
+
+    :param bam: basestring
+        BAM file name
+    :param chrom: basestring
+        chromosome (ie. chr1)
+    :param start:
+        start position (start at this position)
+    :param stop: int
+        stop position (do not exceed this position)
+    :param reffile: basestring
+        reference fasta file
+    :param stepper: stepper
+    :return:
+    """
     total_reads = 0
-    reference = pybedtools.BedTool.seq([chrom, 0, maxlen], reffile)
+    reference = pybedtools.BedTool.seq([chrom, 0, stop], reffile)
     infile = pysam.AlignmentFile(bam, "rb", reference_filename=reffile)
     count = start  # running counter for each position added
     alphabet = {}
@@ -301,14 +318,13 @@ def get_position_matrix(bam, chrom, start, maxlen, reffile, stepper='all'):
     max_offset = 0
     MAX_DEPTH = 10000000
     check = start
-    for pileupcolumn in infile.pileup(chrom, start, maxlen, stepper=stepper,
+    for pileupcolumn in infile.pileup(chrom, start, stop, stepper=stepper,
                                       max_depth=MAX_DEPTH):
         if pileupcolumn.pos >= start:
             st = ""
             # print("pileuppos: {}".format(pileupcolumn.pos))
             # print("count: {}".format(count))
-            if count >= (
-            maxlen) or pileupcolumn.pos >= maxlen:  # I think this works because of sorted reads?
+            if count >= (stop) or pileupcolumn.pos >= stop:  # I think this works because of sorted reads?
                 break
             """
             if there is no read coverage at the beginning positions
@@ -330,11 +346,6 @@ def get_position_matrix(bam, chrom, start, maxlen, reffile, stepper='all'):
             # print str(pp.pos)+'\t'+str(pp.n)
             # print(len(pileupcolumn.pileups))
             for pileupread in pileupcolumn.pileups:  # for each pileup read
-                # offset = start - min(pileupread.alignment.get_reference_positions())
-                # if offset > max_offset:
-                #     max_offset = offset
-                # if(pileupread.query_position >=offset):
-                # print(pileupcolumn.pos)
                 total_reads = total_reads + 1
                 if not pileupread.is_del and not pileupread.indel and not pileupread.is_refskip:
                     st = st + pileupread.alignment.query_sequence[
@@ -363,7 +374,7 @@ def get_position_matrix(bam, chrom, start, maxlen, reffile, stepper='all'):
     """
     If there are positions in the end without read coverage
     """
-    while (count < maxlen):
+    while count < stop:
         # count = count + 1
         alphabet['A'] = 0
         alphabet['T'] = 0
@@ -374,7 +385,7 @@ def get_position_matrix(bam, chrom, start, maxlen, reffile, stepper='all'):
         # print(alphabet)
         count = count + 1
         positions.append(alphabet)
-    # print(start, maxlen, len(positions), max_offset, check-start)
+    # print(start, stop, len(positions), max_offset, check-start)
     # print(total_reads)
     return pd.DataFrame(positions)
 
