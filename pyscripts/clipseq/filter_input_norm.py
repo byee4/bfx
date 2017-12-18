@@ -25,7 +25,7 @@ def filter(input_file, output_file, l10p, l2fc):
             line = line.split('\t')
             p = float(line[3])
             f = float(line[4])
-            if p > l10p and f > l2fc:
+            if p >= l10p and f >= l2fc:
                 o.write('\t'.join(line))
     return 0
 

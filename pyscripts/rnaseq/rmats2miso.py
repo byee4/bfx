@@ -7,16 +7,16 @@ from argparse import ArgumentParser
 def row_to_miso(row):
     if row['strand'] == '+':
         return '{}:{}:{}:{}@{}:{}:{}:{}@{}:{}:{}:{}\t{}'.format(
-            row['chr'],row['upstreamES'],row['upstreamEE'],row['strand'],
-            row['chr'],row['exonStart_0base'],row['exonEnd'],row['strand'],
-            row['chr'],row['downstreamES'],row['downstreamEE'],row['strand'],
+            row['chr'],int(row['upstreamES'])+1,row['upstreamEE'],row['strand'],
+            row['chr'],int(row['exonStart_0base'])+1,row['exonEnd'],row['strand'],
+            row['chr'],int(row['downstreamES'])+1,row['downstreamEE'],row['strand'],
             row['GeneID']
         )
     else:
         return '{}:{}:{}:{}@{}:{}:{}:{}@{}:{}:{}:{}\t{}'.format(
-            row['chr'],row['downstreamES'],row['downstreamEE'],row['strand'],
-            row['chr'],row['exonStart_0base'],row['exonEnd'],row['strand'],
-            row['chr'],row['upstreamES'],row['upstreamEE'],row['strand'],
+            row['chr'],int(row['downstreamES'])+1,row['downstreamEE'],row['strand'],
+            row['chr'],int(row['exonStart_0base'])+1,row['exonEnd'],row['strand'],
+            row['chr'],int(row['upstreamES'])+1,row['upstreamEE'],row['strand'],
             row['GeneID']
         )
 
