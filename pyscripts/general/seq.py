@@ -56,10 +56,10 @@ def gc(seq):
 
 
 def get_ext(my_file):
-    """ Just helps determine whether or not a file extension is a 
-        "FASTA" one or a "GENBANK" one.
-        
-        Returns: either "fasta" or "genbank"
+    """
+    Just helps determine whether or not a file extension is a
+    "FASTA" one or a "GENBANK" one.
+    Returns: either "fasta" or "genbank"
     """
     if os.path.splitext(my_file)[1] in valid_fasta_file_extensions:
         return 'fasta'
@@ -68,19 +68,19 @@ def get_ext(my_file):
 
 
 def query_genbank(infile):
-    """ Returns a record given a genbank file. 
-        The function assumes the file is valid and that it has the fields:
-            LOCUS, ACCESSION, ORGANISM, CDS, ORIGIN and SEQUENCE
-        If these fields are blank or nonexistent, it will return the record
-        with a blank for those fields.
-        
-        Args:
-            infile: The genbank file
-            
-        Returns:
-            A dictionary (record) containing: 
-            {locus, accession, organism, features, sequence}
-        
+    """
+    Returns a record given a genbank file.
+    The function assumes the file is valid and that it has the fields:
+        LOCUS, ACCESSION, ORGANISM, CDS, ORIGIN and SEQUENCE
+    If these fields are blank or nonexistent, it will return the record
+    with a blank for those fields.
+
+    Args:
+        infile: The genbank file
+
+    Returns:
+        A dictionary (record) containing:
+        {locus, accession, organism, features, sequence}
     """
     sequence=""
     locus_id=""
@@ -124,21 +124,23 @@ def query_genbank(infile):
     return records
 
 
-# http://stackoverflow.com/questions/22328319/python-fetch-sequence-from-das-by-coordinates
-# 
 def get_sequence_from_das(my_db,chromosome,start,end):
-    """ Queries the UCSC DAS server given the database, chromosome and position
-        Returns the sequence if it is given valid coordinates, else an empty 
-        string.
-        
-        Args:
-            my_db: the database name (can be hg38, etc.)
-            chromosome: given as "chr1," "chr2," etc.
-            start: the raw start position from the beginning of the chromosome
-            end: The raw end position
-        
-        Returns:
-            Sequence from the DAS
+    """
+    Queries the UCSC DAS server given the database, chromosome and position
+    Returns the sequence if it is given valid coordinates, else an empty
+    string.
+
+    Args:
+        my_db: the database name (can be hg38, etc.)
+        chromosome: given as "chr1," "chr2," etc.
+        start: the raw start position from the beginning of the chromosome
+        end: The raw end position
+
+    Returns:
+        Sequence from the DAS
+
+    See:
+        http://stackoverflow.com/questions/22328319/python-fetch-sequence-from-das-by-coordinates
     """
     sequence=''
     base = "http://genome.ucsc.edu/cgi-bin/das/%s/dna?segment="%my_db
@@ -160,26 +162,27 @@ def get_sequence_from_das(my_db,chromosome,start,end):
 
 def query_refseq_ucsc(refseq_query,exon_specific=False,my_db="hg38",my_user="genome",
                       my_host="genome-mysql.cse.ucsc.edu"):
-    """ Returns a record of the gene associated with the refseq accession number 
-        (ie. NM_000000). The record contains information about the gene, including:
+    """
+    Returns a record of the gene associated with the refseq accession number
+    (ie. NM_000000). The record contains information about the gene, including:
+        name, accession, cds_start, cds_end, sequence, strand, chromosome
+
+    Args:
+        refseq_query: a refseq accession number string
+        exon_specific: sometimes we don't need the sequence, but rather
+            the exons to avoid targeting sequences that don't exist prior
+            to processing. Setting this flag to True ensures a return of
+            an array rather than a string in the dictionary.
+        my_db: Defaults to the latest human hg38 database. Can be any
+            database in UCSC
+        my_user: Defaults to "genome" so unless you're a superstar,
+            don't change it.
+        my_host: Defaults to "genome-mysql.cse.ucsc.edu."
+    Returns:
+        A dictionary containing:
             name, accession, cds_start, cds_end, sequence, strand, chromosome
-            
-        Args:
-            refseq_query: a refseq accession number string
-            exon_specific: sometimes we don't need the sequence, but rather 
-                the exons to avoid targeting sequences that don't exist prior 
-                to processing. Setting this flag to True ensures a return of
-                an array rather than a string in the dictionary.
-            my_db: Defaults to the latest human hg38 database. Can be any
-                database in UCSC 
-            my_user: Defaults to "genome" so unless you're a superstar, 
-                don't change it.
-            my_host: Defaults to "genome-mysql.cse.ucsc.edu." 
-        Returns:
-            A dictionary containing:
-                name, accession, cds_start, cds_end, sequence, strand, chromosome
-                If "exon_specific" is True, the 'sequence' will be an array
-                containing individual exons instead of a sequence string.
+            If "exon_specific" is True, the 'sequence' will be an array
+            containing individual exons instead of a sequence string.
     """
     myDB = pymysql.connect(host=my_host,user=my_user,db=my_db)
     cur = myDB.cursor()
@@ -239,8 +242,9 @@ def query_refseq_ucsc(refseq_query,exon_specific=False,my_db="hg38",my_user="gen
 
 
 def get_closest_exon(chromosome,pos1,pos2,db="ensembl.sql"):
-    """ Gets the closest exons (max 100kb away) from the position specified.
-        It uses (and creates if necessary) 
+    """
+    Gets the closest exons (max 100kb away) from the position specified.
+    It uses (and creates if necessary)
     """
     
     gene_start = pos1 if pos1 < pos2 else pos2
@@ -250,7 +254,9 @@ def get_closest_exon(chromosome,pos1,pos2,db="ensembl.sql"):
     cur = con.cursor()
     cur.execute("SELECT * FROM exons WHERE chromosome = '{0}' AND \
                 ({1} BETWEEN exon_start-100000 AND exon_end+100000 OR \
-                {2} BETWEEN exon_start-100000 AND exon_end+100000)".format(chromosome,gene_start,gene_end))
+                {2} BETWEEN exon_start-100000 AND exon_end+100000)".format(
+        chromosome,gene_start,gene_end
+    ))
     ret = cur.fetchall()
     
     min_dist = 100000
@@ -272,20 +278,21 @@ def get_closest_exon(chromosome,pos1,pos2,db="ensembl.sql"):
 
 
 def create_refseq_exon_sqlite(infile, db="ensembl.sql"):
-    """ Creates the exon sqlite table from results downloaded from biomart.
-        To get this data, go to: http://www.biomart.org/biomart/martview/
-        and select your species and dataset. I selected attributes:
-            Ensembl Gene ID, 
-            Exon Chr Start (bp)
-            Exon Chr End (bp)
-            Associated Gene Name
-            Chromosome Name
-            Strand
-        
-        Args:
-            infile: file downloaded (tab-delimited) from biomart that includes 
-            exon position information
-            db: name of the sql file to be created
+    """
+    Creates the exon sqlite table from results downloaded from biomart.
+    To get this data, go to: http://www.biomart.org/biomart/martview/
+    and select your species and dataset. I selected attributes:
+        Ensembl Gene ID,
+        Exon Chr Start (bp)
+        Exon Chr End (bp)
+        Associated Gene Name
+        Chromosome Name
+        Strand
+
+    Args:
+        infile: file downloaded (tab-delimited) from biomart that includes
+        exon position information
+        db: name of the sql file to be created
     """
     con = sqlite3.connect(db)
     cur = con.cursor()
@@ -321,17 +328,18 @@ def create_refseq_exon_sqlite(infile, db="ensembl.sql"):
 
 
 def mutate_sequence(sequence,mismatch):
-    """ Returns the reference given mismatches (as formatted by standard 
-        Bowtie Output). The Bowtie mismatch string follows the
-        "offset:reference-base>read-base" format, and assumes the given
-        sequence is the read string. 
-       
-        Args: 
-            sequence: The unadulterated read sequence
-            mismatch: The mismatch pattern 
-            
-        Returns:
-            sequence after mismatch pattern is applied
+    """
+    Returns the reference given mismatches (as formatted by standard
+    Bowtie Output). The Bowtie mismatch string follows the
+    "offset:reference-base>read-base" format, and assumes the given
+    sequence is the read string.
+
+    Args:
+        sequence: The unadulterated read sequence
+        mismatch: The mismatch pattern
+
+    Returns:
+        sequence after mismatch pattern is applied
     """
     if(not mismatch): # if there is no mismatch, return original sequence!
         return sequence
@@ -352,14 +360,6 @@ def mutate_sequence(sequence,mismatch):
         else:
             new_sequence[i] = sequence[i]
     new_sequence = "".join(new_sequence)
-    """
-    if(sequence == new_sequence): # Is this a bug? 
-        print("positions:{0}".format(positions))
-        print("original:{0}".format(sequence))
-        print("mismatch:{0}".format(mismatch))
-        print("new seq :{0}".format(new_sequence))
-        return "NNNNNNNNNNNNNNNNNNNNNGG"
-    """
     return new_sequence
 
 
@@ -367,7 +367,7 @@ def fix_fasta_headers(infile, outfile, regex_pattern):
     """
     Formats a fasta file header using regex pattern.
     So instead of the normal header, new headers are just
-     the first found instance of the regex capture.
+    the first found instance of the regex capture.
     
     Parameters
     ----------

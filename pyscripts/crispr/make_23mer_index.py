@@ -1,20 +1,16 @@
 #!/usr/local/bin/python2.7
 # encoding: utf-8
 '''
-python3.make_23mer_index -- shortdesc
+writes to 'output' all 23mers which have a GN(20)GG
 
-python3.make_23mer_index is a description
-
-It defines classes_and_methods
-
-@author:     user_name
+@author:     byee4
 
 @copyright:  2015 organization_name. All rights reserved.
 
 @license:    license
 
-@contact:    user_email
-@deffield    updated: Updated
+@contact:    bay001@ucsd.edu
+@deffield    updated: deprecated use at your own risk!
 '''
 
 import sys
@@ -75,7 +71,7 @@ USAGE
         # Setup argument parser
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter)
         parser.add_argument('-V', '--version', action='version', version=program_version_message)
-        parser.add_argument('-p', "--path", dest="path", help="path to files")
+        parser.add_argument('-p', "--path", dest="path", help="path to files (each file in this directory must contain '.fna' extension")
         parser.add_argument('-o', "--output", dest="output", help="output tabbed file")
         parser.add_argument('-xm', "--filterxm", action='store_true', help="filter out XM_ (predicted) genes")
         parser.add_argument('-xr', "--filterxr", action='store_true', help="filter out XR_ (predicted) genes")
@@ -97,10 +93,11 @@ USAGE
             fil.append('ref|XP_')
     
         if(os.path.isfile(tabbed)):
-            print("Warning! Output file exists and will be overwritten")
-            f = open(tabbed,'w')
-            f.close()
-        
+            print("Warning! Output file exists (will not go any further)")
+            # f = open(tabbed,'w')
+            # f.close()
+            sys.exit(1)
+
         print("path to refseq mRNA files: {0}".format(paths))
         seq = ""
         number_of_files = 0

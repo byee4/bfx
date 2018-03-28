@@ -1,8 +1,13 @@
-from distutils.core import setup
+#!/usr/bin/env python
+
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from distutils.core import setup
 
 setup(
     name='bfx',
-    version='',
+    version='0.0.1',
     packages=['pyscripts', 'crispr', 'encode', 'rnaseq',
               'clipseq', 'general', 'pathway', 'assembly'],
     package_dir={
@@ -12,7 +17,7 @@ setup(
         'clipseq':'pyscripts/clipseq',
         'general':'pyscripts/general',
         'pathway':'pyscripts/pathway',
-        'assembly':'pyscripts/assembly'
+        'assembly':'pyscripts/assembly',
     },
     include_package_data=True,
     url='',
@@ -26,4 +31,9 @@ setup(
         'matplotlib>=1.5',
         'seaborn>=0.7',
     ],
+    entry_points={
+        'console_scripts': [
+            'GOanalysis = pathway.GO:main',
+        ]
+    }
 )

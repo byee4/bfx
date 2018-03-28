@@ -5,7 +5,13 @@ www.youtube.com/watch?v=E7wB__M9fdw
 (Intro to python web scraping by Chris Reeves)
 
 """
+from Bio import Entrez, Medline
+from datetime import datetime
+from urllib.request import urlopen
+import re
+
 root = 'http://www.ncbi.nlm.nih.gov'
+
 
 def build_template(page,term):
     template = open(page,'wb')
@@ -19,7 +25,8 @@ def build_template(page,term):
         template.write(bytes(title,'UTF-8'))
         template.write(b"<br>")
         template.write(bytes(get_abstract(find_link(title)[0]),'UTF-8'))
-        
+
+
 def list_title(term,with_link=True):
     """
     Scrapes NCBI for publications using a given term
@@ -30,8 +37,7 @@ def list_title(term,with_link=True):
         if True, return link otherwise return just the title
     :return:
     """
-    from urllib.request import urlopen
-    import re
+
     
     titles = []
     htmlfile = urlopen('http://www.ncbi.nlm.nih.gov/pubmed/?term={0}'.format(term))
@@ -59,7 +65,7 @@ def list_title(term,with_link=True):
             titles.append(title.decode(encoding))
     return(titles)
 
-#
+
 def get_abstract(link,style=True):
     """
     Returns the abstract given an ncbi link.
@@ -89,6 +95,7 @@ def get_abstract(link,style=True):
         abstract_all = abstract = ''
     return abstract_all if style is True else abstract
 
+
 def full_link(root,rel):
     """
     Appends relative current path to base
@@ -98,6 +105,7 @@ def full_link(root,rel):
     :return:
     """
     return os.path.join(root, rel)
+
 
 def find_link(line):
     """
@@ -110,10 +118,6 @@ def find_link(line):
     url_pattern = re.compile(url_regex)
     url = re.findall(url_pattern,line) # should only be one though...
     return url
-
-from Bio import Entrez, Medline
-from datetime import datetime
-
 
 
 def fetch(t, s, email='brianfbb@yahoo.com'):

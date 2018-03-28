@@ -92,7 +92,6 @@ USAGE
                     bases = bases + len(line)
         print("avg coverage = {0:.2f}".format(sum_cov/i))
         print("avg depth = {0:.2f}".format(bases))
-        print("3,532,909")
         return 0
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###

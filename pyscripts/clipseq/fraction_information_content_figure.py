@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 """
-basic module to use as an example.
+Prints a stacked bar plot for all RBPs (rows) and all repetitive family
+regions (columns)
 """
 
 import argparse
@@ -25,6 +26,15 @@ from tqdm import trange
 
 def run_fraction_information_content_figure(
         broad_table, lowval_cutoff, order_file, color_list, out_file):
+    """
+
+    :param broad_table:
+    :param lowval_cutoff:
+    :param order_file:
+    :param color_list:
+    :param out_file:
+    :return:
+    """
 
     df = format_table(broad_table, lowval_cutoff, order_file)
     regions = set(df.columns)
@@ -36,7 +46,10 @@ def format_table(broad_table, lowval_cutoff, order_file):
     df = pd.read_table(broad_table, sep='\t', index_col=0)
     df = add_others_column(df, lowval_cutoff)
     if order_file == '': # order not set, just use the broad table ordering.
-        order = pd.DataFrame(df.index.levels[1])
+        # order = pd.DataFrame(df.index.levels[1])
+        print(df.index.head())
+        order = pd.DataFrame(df.index.get_level_values(1))
+        print(order)
     else:
         order = pd.read_table(order_file)
     order.columns = ['order']
@@ -49,10 +62,13 @@ def add_others_column(df, lowval_cutoff):
     Takes the entropy/information content table,
     and removes
     """
-    df2 = df.apply(lowsum, axis=1)
-    df2.rename('others',inplace=True)
+    # create series containing sum of all fractions that are less than lowval cutoff
+    s = df.apply(lowsum, axis=1)
+    s.rename('others',inplace=True)
+    print(s.head())
+    # remove columns where they have already been binned into 'others'
     df = df.where(df >= lowval_cutoff, other=0)
-    dx = pd.concat([df2,df],axis=1)
+    dx = pd.concat([s,df],axis=1)
     dx = dx.loc[:, (dx).sum(axis=0)>0]
     return dx
 
@@ -66,7 +82,8 @@ def group_and_order_replicates(dx, order):
     dx = pd.merge(order,dx,left_on='order',right_on='RBP', how='inner').reset_index()
     del dx['order']
     dx.set_index(['index', 'name','RBP'],inplace=True)
-    dx.sortlevel('index',inplace=True)
+    # dx.sortlevel('index',inplace=True)
+    dx.sort_index(level='index', inplace=True)
     dx.reset_index(level=0,drop=True,inplace=True)
 
     return dx

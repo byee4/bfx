@@ -1,3 +1,6 @@
+"""
+Processes DAVID outputs into a format that is parsable into R iGraph packages.
+"""
 import os
 import re
 

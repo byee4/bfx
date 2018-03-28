@@ -21,7 +21,9 @@ import numpy as np
 def _convert_color_to_list(rgb_string):
     return [float(color_value) for color_value in rgb_string[1:-1].split(",")]
 
-def get_lab_manifest():
+def get_lab_manifest(
+        url="https://docs.google.com/spreadsheets/d/1ZU2mQh54jentqvhR_oMnviLGWR8Nw_x338gULzKjNDI/edit#gid=0"
+):
     """
     Returns a formatted manifest given the most updated version on Google
     :return manifest: pandas.DataFrame()
@@ -32,7 +34,7 @@ def get_lab_manifest():
     credentials = SignedJwtAssertionCredentials(json_key['client_email'], json_key['private_key'], scope)
     gc = gspread.authorize(credentials)
     
-    sht1 = gc.open_by_url("https://docs.google.com/spreadsheets/d/1ZU2mQh54jentqvhR_oMnviLGWR8Nw_x338gULzKjNDI/edit#gid=0")
+    sht1 = gc.open_by_url(url)
     ws = sht1.worksheet("Sheet1")
     list_of_lists = ws.get_all_values()
     manifest = pd.DataFrame(list_of_lists[1:], columns=list_of_lists[0])
@@ -44,7 +46,9 @@ def get_lab_manifest():
     manifest = manifest.drop(u'', axis=1) #Drops empty columns to try and get rid of a bug
     return manifest
 
-def get_rbp_color_chooser():
+def get_rbp_color_chooser(
+    url="https://docs.google.com/spreadsheets/d/138x3BU5hRsMUGEooVmuLRy1HbZYYg8Z28SlTK-neVJI/edit#gid=0"
+):
     """
     Chooses colors
     :return:
@@ -55,7 +59,7 @@ def get_rbp_color_chooser():
     credentials = SignedJwtAssertionCredentials(json_key['client_email'], json_key['private_key'], scope)
     gc = gspread.authorize(credentials)
 
-    sht1 = gc.open_by_url("https://docs.google.com/spreadsheets/d/138x3BU5hRsMUGEooVmuLRy1HbZYYg8Z28SlTK-neVJI/edit#gid=0")
+    sht1 = gc.open_by_url(url)
     ws = sht1.worksheet("Sheet1")
     list_of_lists = ws.get_all_values()
     manifest = pd.DataFrame(list_of_lists[1:], columns=list_of_lists[0])
@@ -66,6 +70,9 @@ def get_rbp_color_chooser():
     return manifest
 
 def get_mapped_reads(fn):
+    """
+    Returns the number of mapped reads in a sam file
+    """
     try:
         return pysam.Samfile(fn).mapped
     except ValueError as e:

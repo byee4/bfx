@@ -5,7 +5,6 @@ import glob
 import pandas as pd
 import seaborn as sns
 import os
-import sys
 from argparse import ArgumentParser
 from tqdm import trange
 import matplotlib.pyplot as plt

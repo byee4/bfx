@@ -1,5 +1,8 @@
 #!/usr/bin/env python
+"""
+Simple functions given eric's file structure.
 
+"""
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
@@ -18,6 +21,12 @@ def make_bedtool(eric, offset=0):
 
 
 def count_jcts(jct_df):
+    """
+    Given a dataframe with a 'jct' column that describes a region,
+    return a bedtool from that region
+    :param jct_df:
+    :return:
+    """
     bts = []
     for junc in jct_df['jct']:
         bts.append(make_bedtool(junc))
