@@ -1,0 +1,598 @@
+2018-04-25 16:24:19,539 - toil.toilState - INFO - (Re)building internal scheduler state
+2018-04-25 16:24:19,539 - toil.leader - INFO - Found 1 jobs to start and 0 jobs with successors to run
+2018-04-25 16:24:19,539 - toil.leader - INFO - Checked batch system has no running jobs and no updated jobs
+2018-04-25 16:24:19,540 - toil.leader - INFO - Starting the main loop
+2018-04-25 16:24:21,560 - toil.leader - WARNING - A result seems to already have been processed for job 0
+2018-04-25 16:27:39,415 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' h/Y/job40a8v0 with job batch system ID: 4 and cores: 1, disk: 3.0 G, and memory: 64.0 G
+2018-04-25 16:27:41,440 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' u/S/jobTus3VZ with job batch system ID: 5 and cores: 1, disk: 3.0 G, and memory: 64.0 G
+2018-04-25 16:30:53,907 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' u/S/jobTus3VZ
+2018-04-25 16:30:53,916 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/FastqToSam.cwl' picard FastqToSam H/z/job6v9eC3 with job batch system ID: 6 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 16:30:53,917 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/Q/job92TSgH with job batch system ID: 7 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 16:31:29,821 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' h/Y/job40a8v0
+2018-04-25 16:31:29,872 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/FastqToSam.cwl' picard FastqToSam R/F/jobbsEqtw with job batch system ID: 8 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 16:31:29,872 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/j/joblmEfpd with job batch system ID: 9 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 16:34:21,637 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/Q/job92TSgH
+2018-04-25 16:34:49,193 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/j/joblmEfpd
+2018-04-25 17:24:21,307 - toil.leader - INFO - Reissued any over long jobs
+2018-04-25 17:24:21,308 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-25 18:06:31,457 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 18:06:31: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmp8WllVE.tmp used 896.24% (17.9 GB [19246693376B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 18:06:31,458 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 18:06:31: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmptUKSsP.tmp used 223.07% (4.5 GB [4790443008B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 18:06:31,458 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 18:06:31: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpPEd03d.tmp used 182.25% (3.6 GB [3913890816B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 18:06:31,458 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 18:06:31: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmp_vNAif.tmp used 182.22% (3.6 GB [3913104384B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 18:06:31,458 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 18:06:31: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpzWjsW3.tmp used 182.26% (3.6 GB [3914021888B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 18:06:35,663 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/FastqToSam.cwl' picard FastqToSam H/z/job6v9eC3
+2018-04-25 18:06:35,754 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq e/1/jobQpEmq5 with job batch system ID: 10 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 18:15:41,715 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 18:15:41: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpwaqBEE.tmp used 181.11% (3.6 GB [3889216512B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 18:15:46,011 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq e/1/jobQpEmq5
+2018-04-25 18:15:46,060 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/star.cwl' STAR A/o/jobkN67zG with job batch system ID: 11 and cores: 8, disk: 32.2 G, and memory: 31.2 G
+2018-04-25 18:24:22,158 - toil.leader - INFO - Reissued any over long jobs
+2018-04-25 18:24:22,158 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-25 19:24:23,378 - toil.leader - INFO - Reissued any over long jobs
+2018-04-25 19:24:23,379 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-25 19:29:16,581 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 19:29:16: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpinGqCy.tmp used 190.69% (3.8 GB [4095073280B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 19:29:19,846 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/star.cwl' STAR A/o/jobkN67zG
+2018-04-25 19:29:19,850 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/F/jobNQmstk with job batch system ID: 12 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 19:54:24,179 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 19:54:24: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpCpEE42.tmp used 353.01% (7.1 GB [7580725760B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 19:54:28,628 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/F/jobNQmstk
+2018-04-25 19:54:28,635 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon m/T/jobtXpSXl with job batch system ID: 13 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:14:35,234 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:14:35: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpIuYgVb.tmp used 191.37% (3.8 GB [4109630976B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:14:40,003 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon m/T/jobtXpSXl
+2018-04-25 20:14:40,103 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors D/2/jobSLwx3x with job batch system ID: 14 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:16:04,841 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:16:04: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpsZLGQF.tmp used 2142.45% (42.8 GB [46008802304B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:16:04,842 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:16:04: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpSawwNi.tmp used 520.88% (10.4 GB [11185839104B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:16:04,842 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:16:04: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpHQzx8o.tmp used 426.24% (8.5 GB [9153534976B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:16:04,842 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:16:04: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmp7vlazc.tmp used 426.16% (8.5 GB [9151822848B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:16:04,842 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:16:04: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmp137C67.tmp used 426.97% (8.5 GB [9169009664B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:16:33,438 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/FastqToSam.cwl' picard FastqToSam R/F/jobbsEqtw
+2018-04-25 20:16:33,493 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq Y/V/jobsmhhpe with job batch system ID: 15 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:24:23,536 - toil.leader - INFO - Reissued any over long jobs
+2018-04-25 20:24:23,536 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-25 20:37:02,824 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:37:02: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpCkVXTd.tmp used 420.10% (8.4 GB [9021676544B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:37:02,837 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:37:02: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpKXd0pI.tmp used 196.04% (3.9 GB [4209998848B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:37:06,563 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq Y/V/jobsmhhpe
+2018-04-25 20:37:06,660 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/star.cwl' STAR d/N/job_dvDYz with job batch system ID: 16 and cores: 8, disk: 32.2 G, and memory: 31.2 G
+2018-04-25 20:37:07,581 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors D/2/jobSLwx3x
+2018-04-25 20:37:07,585 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DigitalExpression.cwl' DigitalExpression w/u/jobd_ArNh with job batch system ID: 17 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:45:42,876 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 20:45:42: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job q/K/jobIPUf21/g/tmpS8P_vN.tmp used 194.40% (3.9 GB [4174707712B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 20:45:48,365 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DigitalExpression.cwl' DigitalExpression w/u/jobd_ArNh
+2018-04-25 20:45:48,367 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors D/2/jobSLwx3x with job batch system ID: 18 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:49:58,218 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors D/2/jobSLwx3x
+2018-04-25 20:49:58,220 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon m/T/jobtXpSXl with job batch system ID: 19 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:55:27,393 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon m/T/jobtXpSXl
+2018-04-25 20:55:27,440 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/F/jobNQmstk with job batch system ID: 20 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:59:25,485 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/F/jobNQmstk
+2018-04-25 20:59:25,530 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/Q/job92TSgH with job batch system ID: 21 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 20:59:25,531 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SortSam.cwl' picard SortSam A/o/jobkN67zG with job batch system ID: 22 and cores: 8, disk: 32.2 G, and memory: 31.2 G
+2018-04-25 21:03:21,151 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/Q/job92TSgH
+2018-04-25 21:08:33,022 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SortSam.cwl' picard SortSam A/o/jobkN67zG
+2018-04-25 21:08:33,024 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq e/1/jobQpEmq5 with job batch system ID: 23 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 21:12:53,000 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq e/1/jobQpEmq5
+2018-04-25 21:12:53,002 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/PolyATrimmer.cwl' PolyATrimmer H/z/job6v9eC3 with job batch system ID: 24 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 21:16:55,238 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/PolyATrimmer.cwl' PolyATrimmer H/z/job6v9eC3
+2018-04-25 21:16:55,278 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' u/S/jobTus3VZ with job batch system ID: 25 and cores: 1, disk: 3.0 G, and memory: 64.0 G
+2018-04-25 21:21:24,300 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' u/S/jobTus3VZ
+2018-04-25 21:24:23,988 - toil.leader - INFO - Reissued any over long jobs
+2018-04-25 21:24:23,988 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-25 22:24:24,668 - toil.leader - INFO - Reissued any over long jobs
+2018-04-25 22:24:24,669 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-25 22:38:32,177 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 22:38:32: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpkwoceW.tmp used 472.90% (9.5 GB [10155375616B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 22:38:36,190 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/star.cwl' STAR d/N/job_dvDYz
+2018-04-25 22:38:36,196 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/V/jobt0UFDd with job batch system ID: 28 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-25 23:24:26,577 - toil.leader - INFO - Reissued any over long jobs
+2018-04-25 23:24:26,577 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-25 23:34:59,659 - toil.statsAndLogging - WARNING - Got message from job at time 04-25-2018 23:34:59: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmph3tf0L.tmp used 844.66% (16.9 GB [18139038208B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-25 23:35:04,422 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/V/jobt0UFDd
+2018-04-25 23:35:04,425 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon S/k/job5yaDWl with job batch system ID: 29 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 00:24:27,455 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 00:24:27,456 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 00:27:15,954 - toil.statsAndLogging - WARNING - Got message from job at time 04-26-2018 00:27:15: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpxD_TAX.tmp used 400.73% (8.0 GB [8605638144B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-26 00:27:22,222 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon S/k/job5yaDWl
+2018-04-26 00:27:22,225 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors g/g/job1395Ut with job batch system ID: 30 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 01:23:55,855 - toil.statsAndLogging - WARNING - Got message from job at time 04-26-2018 01:23:55: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpkMfnLY.tmp used 412.11% (8.2 GB [8849931264B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-26 01:24:00,620 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors g/g/job1395Ut
+2018-04-26 01:24:00,624 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DigitalExpression.cwl' DigitalExpression e/Q/jobvh2Iog with job batch system ID: 31 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 01:24:28,988 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 01:24:28,988 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 01:50:24,282 - toil.statsAndLogging - WARNING - Got message from job at time 04-26-2018 01:50:24: Job used more disk than requested. Consider modifying the user script to avoid the chance of failure due to incorrectly requested resources. Job w/o/jobRO5YX_/g/tmpu7DS7g.tmp used 411.12% (8.2 GB [8828673024B] used, 2.0 GB [2147483648B] requested) at the end of its run.
+2018-04-26 01:50:30,612 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DigitalExpression.cwl' DigitalExpression e/Q/jobvh2Iog
+2018-04-26 01:50:30,614 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors g/g/job1395Ut with job batch system ID: 32 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 01:54:09,267 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/DetectBeadSynthesisErrors.cwl' DetectBeadSynthesisErrors g/g/job1395Ut
+2018-04-26 01:54:09,269 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon S/k/job5yaDWl with job batch system ID: 33 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 01:57:41,567 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/TagReadWithGeneExon.cwl' TagReadWithGeneExon S/k/job5yaDWl
+2018-04-26 01:57:41,569 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/V/jobt0UFDd with job batch system ID: 34 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 02:01:16,225 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/MergeBamAlignment.cwl' picard MergeBamAlignment 1/V/jobt0UFDd
+2018-04-26 02:01:16,231 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/j/joblmEfpd with job batch system ID: 35 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 02:01:16,232 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SortSam.cwl' picard SortSam d/N/job_dvDYz with job batch system ID: 36 and cores: 8, disk: 32.2 G, and memory: 31.2 G
+2018-04-26 02:04:52,449 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/CreateSequenceDictionary.cwl' picard CreateSequenceDictionary E/j/joblmEfpd
+2018-04-26 02:24:30,622 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 02:24:30,623 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 03:24:30,956 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 03:24:30,957 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 04:24:32,538 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 04:24:32,538 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 05:24:33,653 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 05:24:33,654 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 06:24:33,662 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 06:24:33,662 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 07:24:35,273 - toil.leader - INFO - Reissued any over long jobs
+2018-04-26 07:24:35,273 - toil.leader - INFO - Rescued any (long) missing jobs
+2018-04-26 07:51:28,415 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SortSam.cwl' picard SortSam d/N/job_dvDYz
+2018-04-26 07:51:28,417 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq Y/V/jobsmhhpe with job batch system ID: 37 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 07:55:00,701 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/SamToFastq.cwl' picard SamToFastq Y/V/jobsmhhpe
+2018-04-26 07:55:00,702 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/PolyATrimmer.cwl' PolyATrimmer R/F/jobbsEqtw with job batch system ID: 38 and cores: 1, disk: 2.0 G, and memory: 31.2 G
+2018-04-26 07:58:30,787 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/PolyATrimmer.cwl' PolyATrimmer R/F/jobbsEqtw
+2018-04-26 07:58:30,789 - toil.leader - INFO - Issued job 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' h/Y/job40a8v0 with job batch system ID: 39 and cores: 1, disk: 3.0 G, and memory: 64.0 G
+2018-04-26 08:02:01,208 - toil.leader - INFO - Job ended successfully: 'file:///projects/ps-yeolab4/software/dropseqtools/1.13/cwl/parse_sample.cwl' h/Y/job40a8v0
+2018-04-26 08:02:13,217 - toil.leader - INFO - No jobs left to run so exiting.
+2018-04-26 08:02:13,218 - toil.leader - INFO - Finished the main loop
+2018-04-26 08:02:13,218 - toil.serviceManager - INFO - Waiting for service manager thread to finish ...
+2018-04-26 08:02:14,055 - toil.serviceManager - INFO - ... finished shutting down the service manager. Took 0.836915016174 seconds
+2018-04-26 08:02:14,056 - toil.statsAndLogging - INFO - Waiting for stats and logging collator thread to finish ...
+2018-04-26 08:02:14,483 - toil.statsAndLogging - INFO - ... finished collating stats and logs. Took 0.427093982697 seconds
+2018-04-26 08:02:14,483 - toil.leader - INFO - Finished toil run successfully
+2018-04-26 08:02:14,536 - toil.realtimeLogger - INFO - Stopping real-time logging server.
+2018-04-26 08:02:14,692 - toil.realtimeLogger - INFO - Joining real-time logging server thread.
+{
+    "output_detect_bead_synthesis_errors": [
+        {
+            "checksum": "sha1$7f0c53ef350cb653fb6b0fad2f3f25f7de0770eb", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.bam", 
+            "class": "File", 
+            "size": 8819901836
+        }, 
+        {
+            "checksum": "sha1$118c3f5de16cdd3bec0a30cf9d20000bfe685db4", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.bam", 
+            "class": "File", 
+            "size": 4170540374
+        }
+    ], 
+    "output_sort_alignment_queryname": [
+        {
+            "checksum": "sha1$b18ac201c1356df68ab8ab5c85e7428b8c068098", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.bam", 
+            "class": "File", 
+            "size": 9108304799
+        }, 
+        {
+            "checksum": "sha1$d632746d9e1900b89f0d68bceb71bcf0df3287c3", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.bam", 
+            "class": "File", 
+            "size": 3687742980
+        }
+    ], 
+    "output_merge_alignment": [
+        {
+            "checksum": "sha1$bd465a282540bf6a3e175b81566276089545344b", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.bam", 
+            "class": "File", 
+            "size": 8597066518
+        }, 
+        {
+            "checksum": "sha1$d74514b4fb31db21fbd84454460e6f3f043ed937", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.bam", 
+            "class": "File", 
+            "size": 4105539702
+        }
+    ], 
+    "output_tag_cell_barcodes_summary": [
+        {
+            "checksum": "sha1$ceb26b057120a86717557ea0ec04fce7630a8c4f", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.summary", 
+            "class": "File", 
+            "size": 97
+        }, 
+        {
+            "checksum": "sha1$0241c7349373f0eee2bcdb23151a1e7897e16396", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.summary", 
+            "class": "File", 
+            "size": 96
+        }
+    ], 
+    "output_trim_3p_polya_sequence": [
+        {
+            "checksum": "sha1$d545ae41d54adb51ce45200fef9015423c94983e", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.bam", 
+            "class": "File", 
+            "size": 9012726783
+        }, 
+        {
+            "checksum": "sha1$d6289acbe880ab185747a6a05f594544baca3c86", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.bam", 
+            "class": "File", 
+            "size": 3885344215
+        }
+    ], 
+    "output_star_alignment": [
+        {
+            "checksum": "sha1$5f25e0b4473e7fde1e2d5a2e08d8d218f1683b1d", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.bam", 
+            "class": "File", 
+            "size": 10145335207
+        }, 
+        {
+            "checksum": "sha1$226e64e560c050a3a810ab504087e86f26da4454", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.bam", 
+            "class": "File", 
+            "size": 4091000437
+        }
+    ], 
+    "output_trim_5p_primer_sequence": [
+        {
+            "checksum": "sha1$3ddf2bfaccca5f15e73e15aa72e579962789ac15", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.bam", 
+            "class": "File", 
+            "size": 9159935756
+        }, 
+        {
+            "checksum": "sha1$07c8a18dcc61109907f586ab577ffa2807f1ab8b", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.bam", 
+            "class": "File", 
+            "size": 3910065063
+        }
+    ], 
+    "output_detect_bead_synthesis_errors_stats": [
+        {
+            "checksum": "sha1$b4e86cb25ebc04cacdebdb8d17541e3959a07a41", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_stats", 
+            "nameext": ".synthesis_stats", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_stats", 
+            "class": "File", 
+            "size": 296706
+        }, 
+        {
+            "checksum": "sha1$354458ee87b033d53273a2b48dcbb5a7945c1a55", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_stats", 
+            "nameext": ".synthesis_stats", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_stats", 
+            "class": "File", 
+            "size": 305612
+        }
+    ], 
+    "output_add_gene_exon_tags": [
+        {
+            "checksum": "sha1$5ee59a0c04d28338635fc5fc4e3fe55d6bbcdca3", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.bam", 
+            "class": "File", 
+            "size": 8841191215
+        }, 
+        {
+            "checksum": "sha1$ffb79d3473265da4619fd41f035db7b7922e2d79", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.bam", 
+            "class": "File", 
+            "size": 4205728678
+        }
+    ], 
+    "output_digital_expression": [
+        {
+            "checksum": "sha1$302bde158834763151fb771648cd506ea2c31742", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.txt.gz", 
+            "nameext": ".gz", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.txt", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.txt.gz", 
+            "class": "File", 
+            "size": 1139749
+        }, 
+        {
+            "checksum": "sha1$40fb48b46872fd9d79e1a0908e868a25922859ec", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.txt.gz", 
+            "nameext": ".gz", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.txt", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.txt.gz", 
+            "class": "File", 
+            "size": 1883658
+        }
+    ], 
+    "output_digital_expression_summary": [
+        {
+            "checksum": "sha1$7bcd7c0db312b483aab597e08a8e2537d9567ca6", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.summary.txt", 
+            "nameext": ".txt", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.summary", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.summary.txt", 
+            "class": "File", 
+            "size": 52774
+        }, 
+        {
+            "checksum": "sha1$1eab50c651972cd733341c3bb08c5cdfc4699b42", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.summary.txt", 
+            "nameext": ".txt", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.summary", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.cleaned.dge.summary.txt", 
+            "class": "File", 
+            "size": 52067
+        }
+    ], 
+    "output_fastq_to_sam": [
+        {
+            "checksum": "sha1$9075792cefb59c86cde59885603008516d706d67", 
+            "basename": "WT_Cort_Org_Original.sam", 
+            "nameext": ".sam", 
+            "nameroot": "WT_Cort_Org_Original", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.sam", 
+            "class": "File", 
+            "size": 45963418484
+        }, 
+        {
+            "checksum": "sha1$9185f7182730801ca15a8a97994a35e74f23a482", 
+            "basename": "WT_Cort_Org_SSS.sam", 
+            "nameext": ".sam", 
+            "nameroot": "WT_Cort_Org_SSS", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.sam", 
+            "class": "File", 
+            "size": 19227682389
+        }
+    ], 
+    "output_star_alignment_mappingstats": [
+        {
+            "checksum": "sha1$cc30269064f24e664dc78ad4f10f9cdebd03c506", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.final.out", 
+            "nameext": ".out", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.final", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.final.out", 
+            "class": "File", 
+            "size": 1869
+        }, 
+        {
+            "checksum": "sha1$355afc1404881db09c564525054820521130ace4", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.final.out", 
+            "nameext": ".out", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.final", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.final.out", 
+            "class": "File", 
+            "size": 1864
+        }
+    ], 
+    "output_tag_molecular_barcodes_summary": [
+        {
+            "checksum": "sha1$a57fad982fd2b91debadf14e089b5543a703d790", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.summary", 
+            "class": "File", 
+            "size": 77
+        }, 
+        {
+            "checksum": "sha1$b8c6e9ee0b463e117dc69c72670500eeb888e30e", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.summary", 
+            "class": "File", 
+            "size": 75
+        }
+    ], 
+    "output_star_alignment_map_unmapped_fwd": [
+        {
+            "checksum": "sha1$46b76cb6a18f11a2c5931585dc07792194bdb09e", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARUnmapped.out.mate1", 
+            "nameext": ".mate1", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARUnmapped.out", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARUnmapped.out.mate1", 
+            "class": "File", 
+            "size": 6305913499
+        }, 
+        {
+            "checksum": "sha1$a977ce02de4b1b3429525b2136bffa8f30f93954", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARUnmapped.out.mate1", 
+            "nameext": ".mate1", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARUnmapped.out", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARUnmapped.out.mate1", 
+            "class": "File", 
+            "size": 2635181351
+        }
+    ], 
+    "output_tag_cell_barcodes": [
+        {
+            "checksum": "sha1$641059fdcbd2752dcf13f5c5c05f4a95de8e5409", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.bam", 
+            "class": "File", 
+            "size": 11174802902
+        }, 
+        {
+            "checksum": "sha1$703cef985a8039408f06c6085c6f680f3d8072ad", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.bam", 
+            "class": "File", 
+            "size": 4785591810
+        }
+    ], 
+    "output_tag_molecular_barcodes": [
+        {
+            "checksum": "sha1$c86c2acf5d6b8c6634b3468802a1c9c754f05b58", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.bam", 
+            "class": "File", 
+            "size": 9144480301
+        }, 
+        {
+            "checksum": "sha1$f6d8f9b48ee1a0bf234c2f8b4e13371f7bfb93e4", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.bam", 
+            "nameext": ".bam", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.bam", 
+            "class": "File", 
+            "size": 3909878231
+        }
+    ], 
+    "output_trim_3p_polya_sequence_summary": [
+        {
+            "checksum": "sha1$15f148c5683ea5c637de86212e52ac7e9a88036f", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.summary", 
+            "class": "File", 
+            "size": 698
+        }, 
+        {
+            "checksum": "sha1$3cfe58ea32ac62383ec8b9fd209933f51ee60428", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.summary", 
+            "class": "File", 
+            "size": 685
+        }
+    ], 
+    "output_star_alignment_starsettings": [
+        {
+            "checksum": "sha1$28aa73d1a1df4794987e4c9aa39541868bfba389", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.out", 
+            "nameext": ".out", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.out", 
+            "class": "File", 
+            "size": 29879
+        }, 
+        {
+            "checksum": "sha1$aa767753308fc0947005ec96038e6eb9fecba441", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.out", 
+            "nameext": ".out", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARLog.out", 
+            "class": "File", 
+            "size": 23359
+        }
+    ], 
+    "output_trim_5p_primer_sequence_summary": [
+        {
+            "checksum": "sha1$8f6da309096877003f1cb7b03d18c21164d0513c", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.summary", 
+            "class": "File", 
+            "size": 365
+        }, 
+        {
+            "checksum": "sha1$96cd469d0341b29a3855a273c2ca32bfc403e118", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.summary", 
+            "nameext": ".summary", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.summary", 
+            "class": "File", 
+            "size": 329
+        }
+    ], 
+    "output_detect_bead_synthesis_errors_summary": [
+        {
+            "checksum": "sha1$1f99e1f05b7d35f91d1ade3d1ccd3ba092f19f94", 
+            "basename": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_summary", 
+            "nameext": ".synthesis_summary", 
+            "nameroot": "WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_Original.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_summary", 
+            "class": "File", 
+            "size": 340
+        }, 
+        {
+            "checksum": "sha1$cbe3ce8efcd70456a71207e6461b4c80778e3e52", 
+            "basename": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_summary", 
+            "nameext": ".synthesis_summary", 
+            "nameroot": "WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon", 
+            "http://commonwl.org/cwltool#generation": 0, 
+            "location": "file:///home/bay001/projects/codebase/metadata/work_dir/aichaim_cortical_organoids_20180424/.tmp/outdir/WT_Cort_Org_SSS.tagged1-12.tagged13-20.filtered.trimmed_smart.polyA_filtered.STARAligned.out.namesorted.merged.TaggedGeneExon.synthesis_summary", 
+            "class": "File", 
+            "size": 335
+        }
+    ]
+}

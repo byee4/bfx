@@ -1,0 +1,5 @@
+#!/usr/bin/env showinf.imaging
+
+file:
+  class: File
+  path: 002002-1.tif

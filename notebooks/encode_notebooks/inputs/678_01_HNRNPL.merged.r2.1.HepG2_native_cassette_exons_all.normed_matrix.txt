@@ -1,0 +1,1 @@
+/projects/ps-yeolab3/bay001/maps/current/se/678_01_HNRNPL.merged.r2.1.HepG2_native_cassette_exons_all.normed_matrix.txt

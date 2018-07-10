@@ -1,0 +1,1 @@
+/projects/ps-yeolab3/bay001/maps/current/se/204_01_RBFOX2.merged.r2.1.RBFOX2-BGHLV26-HepG2.set26-excluded-upon-knockdown.normed_matrix.txt

@@ -17,6 +17,18 @@ import rmats_inclevel_analysis as rmats
 
 
 def get_merged_avg_jc(jc_list, min_events=0):
+    """
+    Returns a merged average dpsi over all events for a list of RMATS
+    jxc (SE.MATS.JunctionCountOnly) files.
+
+    :param jc_list: list
+        list of rMATS files
+    :param min_events: int
+        minimum number of events required from an rMATS file.
+    :return merged: pandas.DataFrame
+        dataframe of values corresponding to the average dpsi for each region
+        described in all rMATS files.
+    """
     merged = pd.DataFrame()
     progress = trange(len(jc_list))
     for f in jc_list:
@@ -32,6 +44,18 @@ def get_merged_avg_jc(jc_list, min_events=0):
 
 
 def plot_correlation(jc_list, out_file, method='spearman'):
+    """
+    Plots the correlation of avg dpsi values among rMATS files
+
+    :param jc_list: list
+        list of rMATS files
+    :param out_file: basestring
+        output svg or png file
+    :param method: basestring
+        method for calculating distance
+    :return merged: pandas.DataFrame
+        see get_merged_avg_jc()
+    """
     merged = get_merged_avg_jc(jc_list)
     g = sns.clustermap(merged.fillna(0).corr(method=method), xticklabels=False, figsize=(10,30))
     x = plt.setp(g.ax_heatmap.get_yticklabels(), rotation=0)  # For y axis

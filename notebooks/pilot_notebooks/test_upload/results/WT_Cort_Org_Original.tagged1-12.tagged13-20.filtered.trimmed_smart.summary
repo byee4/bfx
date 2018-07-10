@@ -1,0 +1,33 @@
+
+## METRICS CLASS	org.broadinstitute.dropseqrna.readtrimming.TrimStartingSequence$TrimMetric
+mean	stdev
+12.94106	5.302905
+
+## HISTOGRAM	java.lang.Integer
+BIN	VALUE
+5	44267
+6	22590
+7	207324
+8	1824
+9	434086
+10	4056
+11	510854
+12	2321
+13	16159
+14	3881
+15	27018
+16	163597
+17	63729
+18	20492
+19	8820
+20	22576
+21	150189
+22	159044
+23	66069
+24	8
+25	1109
+26	3
+27	1
+28	1
+30	1
+

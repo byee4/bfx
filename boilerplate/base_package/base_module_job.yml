@@ -1,4 +1,4 @@
-#!/usr/bin/env cwl-runner
+#!/usr/bin/env imaging-runner
 
 first_number: 5
 second_number: 4

@@ -1,0 +1,1 @@
+/projects/ps-yeolab3/bay001/maps/current/se/696_01_PTBP1.merged.r2.1.PTBP1-BGHLV12-HepG2.set12-excluded-upon-knockdown.normed_matrix.txt

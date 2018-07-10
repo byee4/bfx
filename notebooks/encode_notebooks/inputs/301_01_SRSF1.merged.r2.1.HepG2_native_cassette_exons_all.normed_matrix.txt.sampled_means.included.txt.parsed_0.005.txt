@@ -1,0 +1,1 @@
+/home/elvannostrand/data/clip/CLIPseq_analysis/scripts/integrated_paper_figures/splicing_maps/splicing_map_sampling_20180619/301_01_SRSF1.merged.r2.1.HepG2_native_cassette_exons_all.normed_matrix.txt.sampled_means.included.txt.parsed_0.005.txt
