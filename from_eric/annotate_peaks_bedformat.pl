@@ -28,8 +28,8 @@ my $gencode_gtf_file = "/projects/ps-yeolab4/genomes/hg19/gencode_v19/gencode.v1
 my $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/hg19/gencode_v19/gencode.v19.chr_patch_hapl_scaff.annotation.gtf.parsed_ucsc_tableformat";
 #my $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/hg19/gencode_v19/gencodev19_comprehensive";  
 my $mirbase_fi = "/home/elvannostrand/data/clip/CLIPseq_analysis/RNA_type_analysis/mirbase.v20.hg19.gff3";                            
-my $lncrna_tablefile = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg19.bed.parsed_ucsc_tableformat";
-my $lncrna_fullfi = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg19.gff.parsed";
+my $lncrna_tablefile = "";
+my $lncrna_fullfi = "";
 my $gtf_proteincoding_flag = "no";             
 if ($species eq "hg19") {
 } elsif ($species eq "mm9") {
@@ -45,8 +45,8 @@ if ($species eq "hg19") {
     $gencode_gtf_file = "/projects/ps-yeolab4/genomes/GRCh38/gencode/v26/gencode.v26.chr_patch_hapl_scaff.annotation.gtf";
     $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/GRCh38/gencode/v26/gencode.v26.chr_patch_hapl_scaff.annotation.gtf.parsed_ucsc_tableformat";
     $mirbase_fi = "/home/elvannostrand/data/clip/CLIPseq_analysis/RNA_type_analysis/mirbase.v21.hg38.gff3";
-    $lncrna_tablefile = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg38.bed.parsed_ucsc_tableformat";
-    $lncrna_fullfi = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg38.gff.parsed";
+    $lncrna_tablefile = "";
+    $lncrna_fullfi = "";
 
 } elsif ($species eq "rn6") {
     $gencode_gtf_file = "/projects/ps-yeolab4/genomes/rn6/RN6.gtf";
@@ -69,7 +69,7 @@ if ($species eq "hg19") {
 &parse_trna_list($trna_bed) if ($trna_bed);
 
 my $peak_fi = $ARGV[0];
-my $output = $peak_fi.".annotated_proxdist_miRlncRNA";
+my $output = $peak_fi.".annotated_proxdist_miR";
 open(OUT,">$output");
 &read_peak_fi($peak_fi);
 close(OUT);

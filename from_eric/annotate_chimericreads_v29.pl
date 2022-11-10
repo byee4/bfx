@@ -16,12 +16,16 @@ my %enst2ensg;
 my %ensg2name;
 my %ensg2type;
 
-
+my $debug_flag = 0;
 #defaults to hg19                                                                                                                                                                                        
+my $read_bam_fi = $ARGV[0];
+my $output = $ARGV[1];
+
 my $species = "hg19";
-if (exists $ARGV[1]) {
-    $species = $ARGV[1];
+if (exists $ARGV[2]) {
+    $species = $ARGV[2];
 }
+
 
 my $trna_bed = "/home/elvannostrand/data/clip/CLIPseq_analysis/scripts/hg19-tRNAs.bed";
 my $gencode_gtf_file = "/projects/ps-yeolab4/genomes/hg19/gencode_v19/gencode.v19.chr_patch_hapl_scaff.annotation.gtf";
@@ -30,7 +34,7 @@ my $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/hg19/gencode_v19/g
 my $mirbase_fi = "/home/elvannostrand/data/clip/CLIPseq_analysis/RNA_type_analysis/mirbase.v20.hg19.gff3";                            
 my $lncrna_tablefile = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg19.bed.parsed_ucsc_tableformat";
 my $lncrna_fullfi = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg19.gff.parsed";
-my $gtf_proteincoding_flag = "no";             
+my $gtf_proteincoding_flag = "no";            
 if ($species eq "hg19") {
 } elsif ($species eq "mm9") {
     $trna_bed = "/home/elvannostrand/data/clip/CLIPseq_analysis/scripts/mm9-tRNAs.bed";
@@ -38,20 +42,24 @@ if ($species eq "hg19") {
     $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/mm9/gencode.vM1.annotation.gtf.parsed_ucsc_tableformat";
 } elsif ($species eq "mm10") {
     $trna_bed = "/home/elvannostrand/data/clip/CLIPseq_analysis/scripts/mm10-tRNAs.bed";
-    $gencode_gtf_file = "/projects/ps-yeolab4/genomes/mm10/gencode/gencode.vM15.chr_patch_hapl_scaff.annotation.gtf";
-    $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/mm10/gencode/gencode.vM15.chr_patch_hapl_scaff.annotation.gtf.parsed_ucsc_tableformat";
+    $gencode_gtf_file = "/projects/ps-yeolab4/genomes/mm10/gencode/gencode.vM20.chr_patch_hapl_scaff.annotation.gtf";
+    $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/mm10/gencode/gencode.vM20.chr_patch_hapl_scaff.annotation.gtf.parsed_ucsc_tableformat";
+    $mirbase_fi = "/projects/ps-yeolab3/bay001/annotations/mirbase/mmu_v22.gff3";
+    $lncrna_tablefile = "";
+    $lncrna_fullfi = "";
+    $gtf_proteincoding_flag = "no";
+
 } elsif ($species eq "hg38") {
     $trna_bed = "/home/elvannostrand/data/clip/CLIPseq_analysis/scripts/hg38-tRNAs.bed";
-    $gencode_gtf_file = "/projects/ps-yeolab4/genomes/GRCh38/gencode/v26/gencode.v26.chr_patch_hapl_scaff.annotation.gtf";
-    $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/GRCh38/gencode/v26/gencode.v26.chr_patch_hapl_scaff.annotation.gtf.parsed_ucsc_tableformat";
+    $gencode_gtf_file = "/projects/ps-yeolab3/bay001/annotations/hg38/gencode_v29_encore/ENCFF159KBI.gtf";
+    $gencode_tablebrowser_file = "/projects/ps-yeolab3/bay001/annotations/hg38/from_eric/ENCFF159KBI.gtf.parsed_ucsc_tableformat";
     $mirbase_fi = "/home/elvannostrand/data/clip/CLIPseq_analysis/RNA_type_analysis/mirbase.v21.hg38.gff3";
     $lncrna_tablefile = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg38.bed.parsed_ucsc_tableformat";
     $lncrna_fullfi = "/home/elvannostrand/data/clip/CLIPseq_analysis/lncRNAs/lncipedia_5_0_hg38.gff.parsed";
-
 } elsif ($species eq "rn6") {
-    $gencode_gtf_file = "/projects/ps-yeolab4/genomes/rn6/RN6.gtf";
-    $gencode_tablebrowser_file = "/projects/ps-yeolab4/genomes/rn6/RN6.refGene.table";
-    $mirbase_fi = "/projects/ps-yeolab4/genomes/rn6/rno.gff3";
+    $gencode_gtf_file = "/home/elvannostrand/RN6.gtf";
+    $gencode_tablebrowser_file = "/home/elvannostrand/RN6.refGene.table";
+    # $mirbase_fi = "/home/elvannostrand/rn6_mirbase.gff3";
     $gtf_proteincoding_flag = "all_protein_coding";
     $lncrna_tablefile = "";
     $lncrna_fullfi = "";
@@ -60,7 +68,7 @@ if ($species eq "hg19") {
     die "species $species not implemented\n";
 }
 &read_lncrna_parsed($lncrna_fullfi) if ($lncrna_fullfi);
-&read_mirbase($mirbase_fi);
+&read_mirbase($mirbase_fi) if ($mirbase_fi);
 
 &read_gencode_gtf($gencode_gtf_file,$gtf_proteincoding_flag);
 &read_gencode($gencode_tablebrowser_file);
@@ -68,11 +76,20 @@ if ($species eq "hg19") {
 
 &parse_trna_list($trna_bed) if ($trna_bed);
 
-my $peak_fi = $ARGV[0];
-my $output = $peak_fi.".annotated_proxdist_miRlncRNA";
+my %read_annotation_counts;
+#my $output = $peak_fi.".annotations.txt";
 open(OUT,">$output");
-&read_peak_fi($peak_fi);
+&parse_bam_fi($read_bam_fi);
+#&read_peak_fi($peak_fi);
 close(OUT);
+
+my $out2 = $output.".p.txt";
+open(OUTT,">$out2");
+for my $k (keys %read_annotation_counts) {
+    print OUTT "$k\t".$read_annotation_counts{$k}."\t".sprintf("%.5f",100 * $read_annotation_counts{$k} / $read_annotation_counts{"all"})."\n";
+}
+close(OUTT);
+
 
 sub parse_trna_list {
     my $trna_fi = shift;
@@ -126,7 +143,7 @@ sub read_mirbase {
                 my $feature = $id."|miRNA|".$start."-".$stop;
                 $enst2ensg{$id} = $id;
                 $ensg2name{$id}{$gname} = 1;
-		print STDERR "feature $feature $chr $gname $str\n" if ($gname =~ /mir-21$/);
+#		print STDERR "feature $feature $chr $gname $str\n" if ($gname =~ /mir-21$/);
                 for my $j ($x..$y) {
                     push @{$all_features{$chr}{$str}{$j}},$feature;
                 }
@@ -155,71 +172,99 @@ sub read_mirbase {
 }
 
 
-sub read_peak_fi {
-    my $peakfi = shift;
-    print STDERR "reading $peakfi\n";
-    open(PEAK,$peakfi) || die "no peakfi $peakfi\n";
-    for my $line (<PEAK>) {
-	chomp($line);
-	my @tmp = split(/\t/,$line);
-	my $chr = $tmp[0];
-	my $str = $tmp[5];
-	my $start = $tmp[1];
-	my $stop = $tmp[2];
-#	my ($origchr,$origpos,$str,$orig_pval) = split(/\:/,$tmp[3]);
+sub parse_bam_fi {
+    my $bam_fi = shift;
+    open(BAM,"-|", "samtools view $bam_fi");                                                                                            
 
-	my $debug_flag = 0;
-#	$debug_flag = 1 if ($start == 149420331);
-	
+    while (<BAM>) {
+        my $r1 = $_;
+        chomp($r1);
+        if ($r1 =~ /^\@/) {
+            next;
+	}
+        
+        my @tmp_r1 = split(/\t/,$r1);
+	my $r1sam_flag = $tmp_r1[1];
+#       next if ($r1sam_flag == 77 || $r1sam_flag == 141);                                                                                  
+        next if ($r1sam_flag == 4);
+        my $frag_strand;
+
+        if ($r1sam_flag == 16) {
+            $frag_strand = "-";
+        } elsif ($r1sam_flag eq "0") {
+            $frag_strand = "+";
+        }  else {
+            next;
+            print STDERR "R1 strand error $r1sam_flag\n";
+        }
+
+	my $r1_chr = $tmp_r1[2];
+	my $r1_start = $tmp_r1[3];
+	my $flags_r1 = join("\t",@tmp_r1[11..$#tmp_r1]);
+	my $r1_cigar = $tmp_r1[5];
+
+        my @read_regions = &parse_cigar_string($r1_start,$r1_cigar,$r1_chr,$frag_strand);	
+#	push @regions,$chr.":".$strand.":".($region_start_pos-1)."-".($current_pos-1);
+
+	my $last_region = $read_regions[$#read_regions];
+	my ($rchrlast,$rstrlast,$rposlast) = split(/\:/,$last_region);
+	my ($rstartlast,$rstoplast) = split(/\-/,$rposlast);
+	my $r1_stop = $rstoplast;
+
 	my %tmp_hash;
 	my %tmp_hash2;
 	my $feature_flag = 0;
 
-	my $rx = int($start / $hashing_value);
-	my $ry = int($stop  / $hashing_value);
+	my $rx = int($r1_start / $hashing_value);
+	my $ry = int($r1_stop  / $hashing_value);
 	for my $ri ($rx..$ry) {
-	    for my $feature (@{$all_features{$chr}{$str}{$ri}}) {
+	    for my $feature (@{$all_features{$r1_chr}{$frag_strand}{$ri}}) {
 		my ($feature_enst,$feature_type,$feature_region) = split(/\|/,$feature);
 		my ($feature_start,$feature_stop) = split(/\-/,$feature_region);
 
-		next if ($stop <= $feature_start);
-		next if ($start >= $feature_stop);
+		next if ($r1_stop <= $feature_start);
+		next if ($r1_start >= $feature_stop);
 
-		if ($feature_start <= $start && $stop <= $feature_stop) {
+
+		for my $region (@read_regions) {
+		    my ($rchr,$rstr,$rpos) = split(/\:/,$last_region);
+		    my ($start,$stop) = split(/\-/,$rpos);
+		    
+		    if ($feature_start <= $start && $stop <= $feature_stop) {
                         # peak is entirely within region                                                                                                                                                                                                         
-		    my $feature_ensg = $enst2ensg{$feature_enst};
-		    $tmp_hash{$feature_ensg}{$feature_type}="contained";
-		    for my $jj ($start..($stop-1)) {
-                        $tmp_hash2{$jj}{$feature_ensg}{$feature_type}="contained";
-                        print "found feature $_ $feature $feature_ensg $feature_type\n" if ($verbose_flag == 1);
-                    }
-
-		    $feature_flag = 1;
-		    print "found feature $_ $feature $feature_ensg $feature_type\n" if ($verbose_flag == 1);
-		} elsif (($feature_start >= $start && $feature_start < $stop) || ($feature_stop > $start && $feature_stop <= $stop)) {
-		    # peak is partly overlapping feature
-                    my $feature_ensg = $enst2ensg{$feature_enst};
-		    $tmp_hash{$feature_ensg}{$feature_type}="partial";
-		    $feature_flag = 1;
-		    my $overlap_min = &max($feature_start,$start);
-                    my $overlap_max = &min($feature_stop,$stop);
-                    for my $jj ($overlap_min..$overlap_max) {
-                        $tmp_hash2{$jj}{$feature_ensg}{$feature_type}="partial";
-                    }
-
-		} elsif ($start <= $feature_start && $stop >= $feature_stop) {
-		    # feature is contained within peak
-		    my $feature_ensg = $enst2ensg{$feature_enst};
-		    $tmp_hash{$feature_ensg}{$feature_type}="featurewithin";
-		    $feature_flag = 1;
-		    for my $jj ($feature_start..$feature_stop) {
-                        $tmp_hash2{$jj}{$feature_ensg}{$feature_type}="featurewithin";
-                    }
+			my $feature_ensg = $enst2ensg{$feature_enst};
+			$tmp_hash{$feature_ensg}{$feature_type}="contained";
+			for my $jj ($start..($stop-1)) {
+			    $tmp_hash2{$jj}{$feature_ensg}{$feature_type}="contained";
+			    print "found jj $jj feature $feature $feature_ensg $feature_type\n" if ($verbose_flag == 1);
+			}
+			
+			$feature_flag = 1;
+			print "found feature $feature $feature_ensg $feature_type\n" if ($verbose_flag == 1);
+		    } elsif (($feature_start >= $start && $feature_start < $stop) || ($feature_stop > $start && $feature_stop <= $stop)) {
+			# peak is partly overlapping feature
+			my $feature_ensg = $enst2ensg{$feature_enst};
+			$tmp_hash{$feature_ensg}{$feature_type}="partial";
+			$feature_flag = 1;
+			my $overlap_min = &max($feature_start,$start);
+			my $overlap_max = &min($feature_stop,$stop);
+			for my $jj ($overlap_min..$overlap_max) {
+			    $tmp_hash2{$jj}{$feature_ensg}{$feature_type}="partial";
+			}
+			print "found feature $feature start $start featstart $feature_start stop $stop featstop $feature_stop\n" if ($verbose_flag == 1); 
+		    } elsif ($start <= $feature_start && $stop >= $feature_stop) {
+			# feature is contained within peak
+			my $feature_ensg = $enst2ensg{$feature_enst};
+			$tmp_hash{$feature_ensg}{$feature_type}="featurewithin";
+			$feature_flag = 1;
+			for my $jj ($feature_start..$feature_stop) {
+			    $tmp_hash2{$jj}{$feature_ensg}{$feature_type}="featurewithin";
+			}
+		    }
+		    
 		}
-
 	    }
 	}
-
 	if ($debug_flag == 1) {
 	    for my $k (keys %tmp_hash) {
 		for my $e (keys %{$tmp_hash{$k}}) {
@@ -261,45 +306,52 @@ sub read_peak_fi {
       }
 
 
-	my %final_feature_type;
-        my %final_feature_ensg;
-        my %final_feature_type_sum;
-        for my $jj ($start..($stop-1)) {
-#            my %ensg2featuretype2;
-            my %featuretype2ensg2;
+	my %final_feature_type_hash;
+        my %final_feature_ensg_hash;
+        my %final_feature_type_sum_hash;
 
-            for my $overlapped_ensg (keys %{$tmp_hash2{$jj}}) {
-              TYPELOOP:     for my $feature_type ("tRNA","miRNA","miRNA_proximal","CDS","3utr","5utr","5ss","3ss","proxintron","distintron","noncoding_exon","noncoding_5ss","noncoding_3ss","noncoding_proxintron","noncoding_distintron") {
-                  if (exists $tmp_hash2{$jj}{$overlapped_ensg}{$feature_type}) {
-                      $featuretype2ensg2{$feature_type}{$overlapped_ensg} = 1;
+	for my $region (@read_regions) {
+	    my ($rchr,$rstr,$rpos) = split(/\:/,$last_region);
+	    my ($start,$stop) = split(/\-/,$rpos);
+
+	    for my $jj ($start..($stop-1)) {
+#            my %ensg2featuretype2;
+		my %featuretype2ensg2;
+		
+		for my $overlapped_ensg (keys %{$tmp_hash2{$jj}}) {
+		  TYPELOOP:     for my $feature_type ("tRNA","miRNA","miRNA_proximal","CDS","3utr","5utr","5ss","3ss","proxintron","distintron","noncoding_exon","noncoding_5ss","noncoding_3ss","noncoding_proxintron","noncoding_distintron") {
+		      if (exists $tmp_hash2{$jj}{$overlapped_ensg}{$feature_type}) {
+			  $featuretype2ensg2{$feature_type}{$overlapped_ensg} = 1;
 #                     $ensg2featuretype2{$overlapped_ensg}{type} = $feature_type;
 #                     $ensg2featuretype2{$overlapped_ensg}{flag} = &get_type_flag(\%tmp_hash2,$feature_type);
-                      last TYPELOOP;
-                  }
-              }
-            }
-
-            $final_feature_type{$jj} = "intergenic";
-            $final_feature_ensg{$jj} = "NA";
-
+			  last TYPELOOP;
+		      }
+		  }
+		}
+		
+	    
+		$final_feature_type_hash{$jj} = "intergenic";
+		$final_feature_ensg_hash{$jj} = "NA";
+		
             my $saved_final_feature_type = "intergenic";
-          TYPELOOPB:           for my $feature_type ("tRNA","miRNA","CDS","3utr","5utr","miRNA_proximal","noncoding_exon","5ss","noncoding_5ss","3ss","noncoding_3ss","proxintron","noncoding_proxintron","distintron","noncoding_distintron") {
-              if (exists $featuretype2ensg2{$feature_type}) {
+	      TYPELOOPB:           for my $feature_type ("tRNA","miRNA","CDS","3utr","5utr","miRNA_proximal","noncoding_exon","5ss","noncoding_5ss","3ss","noncoding_3ss","proxintron","noncoding_proxintron","distintron","noncoding_distintron") {
+		  if (exists $featuretype2ensg2{$feature_type}) {
 #                  $final_feature_type{$jj} = $feature_type."||".join("||",keys %{$featuretype2ensg2{$feature_type}});
 #                  $final_feature_ensg{$jj} = join("||",keys %{$featuretype2ensg2{$feature_type}});
-                  $saved_final_feature_type = $feature_type;
-                  last TYPELOOPB;
-              }
-
-          }
-            $final_feature_type_sum{$saved_final_feature_type}++;
-
-        }
+		      $saved_final_feature_type = $feature_type;
+		      last TYPELOOPB;
+		  }
+		  
+	      }
+		$final_feature_type_sum_hash{$saved_final_feature_type}++;
+		
+	    }
+	}
 
 	
 	my @toprint2;
-        for my $feature_type (keys %final_feature_type_sum) {
-            push @toprint2,$feature_type."|".$final_feature_type_sum{$feature_type};
+        for my $feature_type (keys %final_feature_type_sum_hash) {
+            push @toprint2,$feature_type."|".$final_feature_type_sum_hash{$feature_type};
         }
 
         my @final_ensgs = split(/\|\|/,$final_feature_ensg);
@@ -310,10 +362,13 @@ sub read_peak_fi {
             }
         }
 
-	print OUT "$line\t$all_ensg_overlap\t$final_feature_type\t$final_feature_ensg\t".join("|",keys %final_genenames)."\t".join("||",@toprint2)."\n";
-	
+	print OUT "$r1\t".join("|",@read_regions)."\t$all_ensg_overlap\t$final_feature_type\t$final_feature_ensg\t".join("|",keys %final_genenames)."\t".join("||",@toprint2)."\n";
+
+	my ($final_annotation,$final_annotation_ensg) = split(/\|\|/,$final_feature_type);
+	$read_annotation_counts{$final_annotation}++;
+	$read_annotation_counts{"all"}++;
     }
-    close(PEAK);
+    close(BAM);
 }
 
 
@@ -336,9 +391,9 @@ sub get_type_flag {
 sub read_gencode {
     ## eric note: this has been tested for off-by-1 issues with ucsc brower table output!                                                                                                                                                              
     my $fi = shift;
-#    my $fi = "/projects/ps-yeolab/genomes/hg19/gencode_v19/gencodev19_comprehensive";
+#    my $fi = "/projects/ps-yeolab4/genomes/hg19/gencode_v19/gencodev19_comprehensive";
     print STDERR "reading in $fi\n";
-    open(F,$fi);
+    open(F,$fi) || die "couldn't openm $fi\n";
     while (<F>) {
         chomp($_);
         my @tmp = split(/\t/,$_);
@@ -534,7 +589,7 @@ sub read_gencode_gtf {
 
     my $file = shift;
     my $all_protein_coding_flag = shift;
-#    my $file = "/projects/ps-yeolab/genomes/hg19/gencode_v19/gencode.v19.chr_patch_hapl_scaff.annotation.gtf";
+#    my $file = "/projects/ps-yeolab4/genomes/hg19/gencode_v19/gencode.v19.chr_patch_hapl_scaff.annotation.gtf";
     print STDERR "Reading in $file\n";
     open(F,$file);
     for my $line (<F>) {
@@ -645,5 +700,57 @@ sub min {
         return($y);
     }
 }
+
+
+
+
+
+sub parse_cigar_string {
+    my $region_start_pos = shift;
+    my $flags = shift;
+    my $chr = shift;
+    my $strand = shift;
+
+    my $current_pos = $region_start_pos;
+    my @regions;
+
+    while ($flags =~ /(\d+)([A-Z])/g) {
+       
+        if ($2 eq "N") {
+            #read has intron of N bases at location
+
+# 1 based, closed ended to 0 based, right side open ended fix            
+#            push @regions,$chr.":".$strand.":".$region_start_pos."-".($current_pos-1);
+            push @regions,$chr.":".$strand.":".($region_start_pos-1)."-".($current_pos-1);
+
+            $current_pos += $1;
+            $region_start_pos = $current_pos;
+        } elsif ($2 eq "M") {
+            #read and genome match
+            $current_pos += $1;
+        } elsif ($2 eq "S") {
+            #beginning of read is soft-clipped; mapped pos is actually start pos of mapping not start of read
+        } elsif ($2 eq "I") {
+            #read has insertion relative to genome; doesn't change genome position
+        } elsif ($2 eq "D") {
+#           push @read_regions,$chr.":".$current_pos."-".($current_pos+=$1);
+            $current_pos += $1;
+            #read has deletion relative to genome; genome position has to increase
+        } else {
+            print STDERR "flag $1 $2 $flags\n";
+
+        }
+    }
+
+# 1 based, closed ended to 0 based, right side open ended fix            
+# $region_start_pos is 1-based, closed ended -> ($region_start_pos-1) is 0-based, closed ended
+# ($current_pos-1) is 1-based, closed ended -> ($current_pos-1-1) is 0-based, closed ended -> ($current_pos-1-1+1) is 0-based, open ended
+
+#    push @regions,$chr.":".$strand.":".$region_start_pos."-".($current_pos-1);
+    push @regions,$chr.":".$strand.":".($region_start_pos-1)."-".($current_pos-1);
+
+    return(@regions);
+}
+
 
 
