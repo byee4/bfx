@@ -5,7 +5,7 @@ GO analysis script
 __author__ = 'mlovci'
 """
 from __future__ import division
-from itertools import izip
+# from itertools import izip
 from functools import partial
 
 import numpy as np
@@ -32,7 +32,7 @@ class GO(object):
         GO, allGenes = self._generateOntology()
         self.GO = GO
         self.allGenes = allGenes
-        self.gene_id_to_name = dict(izip(self.GO_to_ENSG['Gene stable ID'],
+        self.gene_id_to_name = dict(zip(self.GO_to_ENSG['Gene stable ID'],
                                          self.GO_to_ENSG[
                                              'Gene name']))
 

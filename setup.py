@@ -30,6 +30,7 @@ setup(
         'pandas>=0.16',
         'matplotlib>=1.5',
         'seaborn>=0.7',
+        'pysam>=0.15',
     ],
     entry_points={
         'console_scripts': [

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+module load sratools
+
+ACCS=('SRR11518725' 'SRR11518726' 'SRR11518727' 'SRR11518728' 'SRR11518729' 'SRR11518730' 'SRR11518731' 'SRR11518732' 'SRR11518733' 'SRR11518734' 'SRR11518735' 'SRR11518736' 'SRR11518737' 'SRR11518738' 'SRR11518739' 'SRR11518740')
+
+for ACC in "${ACCS[@]}"; do
+  fastq-dump \
+  --gzip \
+  --split-files \
+  --origfmt \
+  ${ACC}
+done
